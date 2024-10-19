@@ -26,7 +26,12 @@
     -->
     <title>React App</title>
   </head>
-  <body>
+  <style>
+    .no_scroll::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+  <body class="no_scroll">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
