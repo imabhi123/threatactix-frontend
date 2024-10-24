@@ -356,7 +356,7 @@ const WorldMapComponent = () => {
                 ></div>
               </div>
             </div>
-            <span className="w-8 text-right">{item.value}%</span>
+            <span className="w-8 text-right">{item.value}</span>
             <span className="w-8 text-right text-gray-500">({item.count})</span>
           </div>
         ))}

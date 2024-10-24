@@ -40,7 +40,7 @@ function App() {
                 <Route path="/victims" element={<VictimsPage />} />
                 <Route path="/attacks" element={<AttacksPage />} />
                 <Route path="/profile" element={<UserProfile />} />
-                <Route path="/threat-feed" element={<CyberAttackReportPage />} />
+                <Route path="/threat-feed/:id" element={<CyberAttackReportPage />} />
                 <Route path="/threat-actors" element={<ThreatActorsPage />} />
               </Routes>
             </div>

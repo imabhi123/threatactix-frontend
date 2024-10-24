@@ -9,9 +9,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">About ThreetTactix</h3>
+            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">About Threatactix</h3>
             <p className="mb-4">
-              ThreetTactix provides cutting-edge cybersecurity threat intelligence to help organizations stay ahead of emerging threats and protect their digital assets.
+              Threatactix provides cutting-edge cybersecurity threat intelligence to help organizations stay ahead of emerging threats and protect their digital assets.
             </p>
             <div className="flex space-x-4">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors duration-300">
@@ -65,7 +65,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-gray-300 dark:border-gray-700">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p>&copy; {new Date().getFullYear()} ThreetTactix. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Threatactix. All rights reserved.</p>
             <div className="mt-4 md:mt-0">
               <Link to="/privacy" className="hover:underline mr-4">Privacy Policy</Link>
               <Link to="/terms" className="hover:underline">Terms of Service</Link>

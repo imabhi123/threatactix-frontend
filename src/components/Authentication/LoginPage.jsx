@@ -4,12 +4,14 @@ import { signInWithGoogle } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { loginUser } from '../../apis/api'; // Import the login function
+import AdaptivePulsatingSpinner from '../Loading';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading,setLoading]=useState(false);
   const { token, setToken } = useContext(AuthContext);
 
   useEffect(() => {
@@ -50,24 +52,30 @@ const LoginPage = () => {
   const handleGoogleSignIn = async () => {
     try {
       const user = await signInWithGoogle();
+      console.log(user)
       if (user?.uid) {
         localStorage.setItem("token", user?.accessToken);
         setToken(user?.accessToken);
         navigate('/dashboard');
       }
     } catch (error) {
+      setLoading(false);
       console.error('Google sign-in error:', error);
     }
   };
 
+  if(loading){
+    return <AdaptivePulsatingSpinner/>
+  }
+
   return (
-    <div className="flex max-w-full flex-wrap h-screen bg-white text-black dark:bg-black dark:text-white">
-      <div className="flex-1 max-w-[100%] flex flex-col justify-center px-12">
-        <div className="flex relative bottom-16 items-center mb-8">
+    <div className="flex max-w-full flex-wrap min-h-screen bg-white text-black dark:bg-black dark:text-white">
+      <div className="flex-1 max-w-[100%] flex py-12 flex-col justify-center px-12">
+        <div className="flex relative   items-center mb-8">
           <Shield className="w-8 h-8 text-blue-500 dark:text-red-500 mr-2" />
-          <h1 className="text-5xl font-bold">THREATACTIX</h1>
+          <h1 className="text-3xl md:text-5xl font-bold">THREATACTIX</h1>
         </div>
-        <h2 className="text-4xl md:text-6xl font-bold mb-8">
+        <h2 className="text-2xl md:text-4xl md:text-6xl font-bold mb-8">
           Hunt, Identify and <span className="text-blue-500 dark:text-green-500">Act</span> on{' '}
           <span className="text-red-500 dark:text-red-500">threats</span>
           <br />

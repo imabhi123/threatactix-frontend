@@ -3,6 +3,7 @@ import { Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { signInWithGoogle } from "../../firebase";
 import { AuthContext } from "../../context/AuthContext";
+import AdaptivePulsatingSpinner from "../Loading";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -36,10 +37,14 @@ const SignUpPage = () => {
         navigate("/");
       }
       console.log(user?.accessToken);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Google sign-in error:", error);
     }
   };
+
+  if(loading)return <AdaptivePulsatingSpinner/>;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,6 +54,7 @@ const SignUpPage = () => {
     const { firstName, lastName, email, password } = formData;
 
     try {
+      setLoading(true);
       console.log(process.env.BASE_URL)
       const response = await fetch("http://localhost:5000/api/v1" + "/user/register", {
         method: "POST",
@@ -68,12 +74,12 @@ const SignUpPage = () => {
       if (!response.ok) {
         throw new Error(data.message || "Failed to register");
       }
+      else navigate("/login");
 
-
-      // Assuming the API retu
-        navigate("/login");
+      setLoading(false);
     } catch (error) {
       setError(error.message);
+      setLoading(false);
       console.error("Registration error:", error);
     } finally {
       setLoading(false);

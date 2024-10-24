@@ -203,7 +203,7 @@ const VictimsPage = () => {
       </div>
 
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between flex-wrap gap-4 items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
             Recent Victims
           </h2>

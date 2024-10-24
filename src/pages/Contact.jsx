@@ -145,8 +145,8 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-400">Email</p>
-                  <a href="mailto:info@falconfeeds.io" className="text-lg text-blue-400 hover:underline">
-                    info@falconfeeds.io
+                  <a href="mailto:info@skjflksdjf.io" className="text-lg text-blue-400 hover:underline">
+                    info@skjflksdjf.io
                   </a>
                 </div>
               </div>
@@ -167,7 +167,7 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-400">Address</p>
-                  <p className="text-lg">123 Falcon St, Bangalore, India</p>
+                  <p className="text-lg">123 Threatactix St, Bangalore, India</p>
                 </div>
               </div>
             </div>
