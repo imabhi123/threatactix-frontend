@@ -88,30 +88,22 @@ const SignUpPage = () => {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-white dark:bg-black text-black dark:text-white">
-      <div className="flex-1 flex flex-col justify-center px-4 lg:px-12 py-8 lg:py-0">
-        <div className="flex items-center mb-8">
-          <Shield className="w-6 h-6 lg:w-8 lg:h-8 text-red-500 mr-2" />
-          <h1 className="text-3xl lg:text-5xl font-bold">THREATACTIX</h1>
+       <div className="flex-1 max-w-[100%] flex py-12 flex-col justify-center px-12">
+        <div className="flex relative items-center mb-8">
+          <Shield className="w-8 h-8 text-blue-500 dark:text-red-500 mr-2" />
+          <h1 className="text-3xl md:text-5xl font-bold">Threatactix-The C&C Blacklist</h1>
         </div>
-        <h2 className="text-3xl lg:text-6xl font-bold mb-8">
-          Hunt, Identify and <span className="text-green-500">Act</span> on{" "}
-          <span className="text-red-500">threats</span>
-          <br />
-          before they can harm you<span className="text-red-500">.</span>
+        <h2 className="text-2xl md:text-3xl  font-bold mb-8">
+          "Shifting from shadows to the spotlight: <span className="text-red-500 dark:text-red-500">we uncover, unveil, and blacklist malicious actors</span> to safeguard your business."
         </h2>
-        <ul className="space-y-3">
+        <ul className="space-y-3 text-xl">
           {[
-            "Comprehensive threat actor directory",
-            "Constantly updated threat feeds",
-            "Safe source for tracking threat actors and campaigns",
-            "Data funnelled from all parts of the internet",
+            'APT (Advanced Persistent Threat) vs. ABT (Adversary Behavior Tracker)',
+            'Adversary Behavior Tracker: Monitoring key indicators of malicious intent.',
+            'Behavioral Blueprint of Attackers: Spot tactics before they threaten your business.'
           ].map((feature, index) => (
-            <li key={index} className="flex text-base lg:text-xl items-center">
-              <svg
-                className="w-5 h-5 text-green-500 mr-2 flex-shrink-0"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
+            <li key={index} className="flex items-center">
+              <svg className="w-5 h-5 text-blue-500 dark:text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -122,13 +114,9 @@ const SignUpPage = () => {
             </li>
           ))}
         </ul>
-        <div className="mt-8 text-xs text-gray-500 dark:text-gray-400">
+        <div className="mt-8 text-xs text-gray-500 dark:text-gray-300">
           Powered by
-          <img
-            src="/api/placeholder/100/20"
-            alt="Technisanct logo"
-            className="inline-block ml-2"
-          />
+          <img src="/api/placeholder/100/20" alt="Technisanct logo" className="inline-block ml-2" />
         </div>
       </div>
       <div className="w-full lg:w-[40%] bg-gray-200 dark:bg-gray-900 p-4 lg:p-8 flex flex-col justify-center items-center">

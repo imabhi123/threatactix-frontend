@@ -17,18 +17,21 @@ import HomePage from "./pages/HomePage";
 import CyberAttackReportPage from "./pages/ThreatFeed";
 import ThreatActorsPage from "./pages/ThreatActors";
 import UserProfile from "./pages/ProfilePage";
+import PromotionBar from "./components/Header/PromotionBar";
 
 function App() {
-  
   return (
     <AuthProvider>
-      <ThemeProvider> {/* Use ThemeProvider here */}
+      <ThemeProvider>
+        {" "}
+        {/* Use ThemeProvider here */}
         <Router>
           <div className="no_scroll overflow-x-hidden">
+            {/* <PromotionBar/> */}
             <Navbar />
-            <div className="relative top-[64px] px-[4%] md:px-[10%] bg-gray-100 dark:bg-gray-900">
+            <div className="relative top-[100px] px-[4%] md:px-[10%] bg-gray-100 dark:bg-gray-900">
               <Routes>
-              <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/dashboard" element={<ExtremeHeroSection />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
@@ -40,11 +43,14 @@ function App() {
                 <Route path="/victims" element={<VictimsPage />} />
                 <Route path="/attacks" element={<AttacksPage />} />
                 <Route path="/profile" element={<UserProfile />} />
-                <Route path="/threat-feed/:id" element={<CyberAttackReportPage />} />
+                <Route
+                  path="/threat-feed/:id"
+                  element={<CyberAttackReportPage />}
+                />
                 <Route path="/threat-actors" element={<ThreatActorsPage />} />
               </Routes>
             </div>
-            <Footer/>
+            <Footer />
           </div>
         </Router>
       </ThemeProvider>

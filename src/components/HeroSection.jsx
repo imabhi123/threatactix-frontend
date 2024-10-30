@@ -287,6 +287,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import WorldMapComponent from "./WorldMapComponent";
 import { endDateToday } from "../utils/utils";
+import CampaignList from "./CampaignsTable";
 
 const StatCard = ({ Icon, title, value, color }) => (
   <div
@@ -504,6 +505,7 @@ const Dashboard = () => {
             </ul>
           </div>
         </div>
+        <CampaignList/>
       </div>
     </div>
   );

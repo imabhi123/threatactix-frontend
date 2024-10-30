@@ -3,7 +3,7 @@ import { Shield } from 'lucide-react';
 import { signInWithGoogle } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { loginUser } from '../../apis/api'; // Import the login function
+import { loginUser } from '../../apis/api';
 import AdaptivePulsatingSpinner from '../Loading';
 
 const LoginPage = () => {
@@ -11,7 +11,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading,setLoading]=useState(false);
+  const [loading, setLoading] = useState(false);
   const { token, setToken } = useContext(AuthContext);
 
   useEffect(() => {
@@ -34,10 +34,9 @@ const LoginPage = () => {
 
     try {
       const credentials = { email, password };
-      const response = await loginUser(credentials); // Call the API
+      const response = await loginUser(credentials);
 
-      console.log(response)
-      if (response?.statusCode===200) {
+      if (response?.statusCode === 200) {
         localStorage.setItem('token', response?.data?.accessToken);
         setToken(response?.data?.accessToken);
         navigate('/dashboard');
@@ -52,7 +51,6 @@ const LoginPage = () => {
   const handleGoogleSignIn = async () => {
     try {
       const user = await signInWithGoogle();
-      console.log(user)
       if (user?.uid) {
         localStorage.setItem("token", user?.accessToken);
         setToken(user?.accessToken);
@@ -64,31 +62,27 @@ const LoginPage = () => {
     }
   };
 
-  if(loading){
-    return <AdaptivePulsatingSpinner/>
+  if (loading) {
+    return <AdaptivePulsatingSpinner />;
   }
 
   return (
     <div className="flex max-w-full flex-wrap min-h-screen bg-white text-black dark:bg-black dark:text-white">
       <div className="flex-1 max-w-[100%] flex py-12 flex-col justify-center px-12">
-        <div className="flex relative   items-center mb-8">
+        <div className="flex relative items-center mb-8">
           <Shield className="w-8 h-8 text-blue-500 dark:text-red-500 mr-2" />
-          <h1 className="text-3xl md:text-5xl font-bold">THREATACTIX</h1>
+          <h1 className="text-3xl md:text-5xl font-bold">Threatactix-The C&C Blacklist</h1>
         </div>
-        <h2 className="text-2xl md:text-4xl md:text-6xl font-bold mb-8">
-          Hunt, Identify and <span className="text-blue-500 dark:text-green-500">Act</span> on{' '}
-          <span className="text-red-500 dark:text-red-500">threats</span>
-          <br />
-          before they can harm you<span className="text-red-500">.</span>
+        <h2 className="text-2xl md:text-3xl  font-bold mb-8">
+          "Shifting from shadows to the spotlight: <span className="text-red-500 dark:text-red-500">we uncover, unveil, and blacklist malicious actors</span> to safeguard your business."
         </h2>
-        <ul className="space-y-3">
+        <ul className="space-y-3 text-xl">
           {[
-            'Comprehensive threat actor directory',
-            'Constantly updated threat feeds',
-            'Safe source for tracking threat actors and campaigns',
-            'Data funnelled from all parts of the internet',
+            'APT (Advanced Persistent Threat) vs. ABT (Adversary Behavior Tracker)',
+            'Adversary Behavior Tracker: Monitoring key indicators of malicious intent.',
+            'Behavioral Blueprint of Attackers: Spot tactics before they threaten your business.'
           ].map((feature, index) => (
-            <li key={index} className="flex text-xl items-center">
+            <li key={index} className="flex items-center">
               <svg className="w-5 h-5 text-blue-500 dark:text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fillRule="evenodd"

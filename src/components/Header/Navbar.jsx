@@ -4,6 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
 import logo from "../../assets/images/logo_main.jpeg";
 import { ThemeContext } from "../../context/ThemeContext";
+import PromotionBar from "./PromotionBar";
 
 const Navbar = () => {
   const { token, signOut } = useContext(AuthContext);
@@ -45,7 +46,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ease-in-out
+      className={`fixed  w-full z-50 transition-all duration-300 ease-in-out
       ${
         isScrolled
           ? isDarkMode
@@ -57,6 +58,7 @@ const Navbar = () => {
       }
       ${isMenuOpen ? "h-screen md:h-auto" : ""}`}
     >
+      <PromotionBar/>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
