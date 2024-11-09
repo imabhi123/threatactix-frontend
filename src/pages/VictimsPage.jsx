@@ -59,8 +59,8 @@ const VictimsPage = () => {
       const attackTrendResponse = await fetch(
         "http://localhost:5000/api/v1/incident/incidents"
       );
-      const attackTrendData = await attackTrendResponse.json();
-      console.log(attackTrendData.data);
+      const attackTrendData = await attackTrendResponse?.json();
+      console?.log(attackTrendData?.data);
       setIncidents(attackTrendData?.data);
 
       // Maps for storing counts
@@ -69,56 +69,35 @@ const VictimsPage = () => {
       const industryMap = new Map();
 
       // Loop through data and populate maps
-      attackTrendData.data.forEach((incident) => {
-        incident.victims.forEach((victim) => {
-          // Count organizations
-          if (victim.organization) {
-            if (victimMap.has(victim.organization)) {
-              victimMap.set(
-                victim.organization,
-                victimMap.get(victim.organization) + 1
-              );
-            } else {
-              victimMap.set(victim.organization, 1);
-            }
-          }
+      
+      attackTrendData?.data?.forEach((incident) => {
+        victimMap?.set(
+          incident?.data[0]?.row.victims_organization,
+          victimMap?.get(incident?.data[0]?.row.victims_organization)?victimMap?.get(incident?.data[0]?.row.victims_organization) + 1:1
+        );
+        countryMap?.set(
+          incident?.data[0]?.row.victims_country,
+          countryMap?.get(incident?.data[0]?.row.victims_country)?countryMap?.get(incident?.data[0]?.row.victims_country) + 1:1
+        );
 
-          // Count countries
-          if (victim.country) {
-            if (countryMap.has(victim.country)) {
-              countryMap.set(
-                victim.country,
-                countryMap.get(victim.country) + 1
-              );
-            } else {
-              countryMap.set(victim.country, 1);
-            }
-          }
-
-          // Count industries
-          if (victim.industry) {
-            if (industryMap.has(victim.industry)) {
-              industryMap.set(
-                victim.industry,
-                industryMap.get(victim.industry) + 1
-              );
-            } else {
-              industryMap.set(victim.industry, 1);
-            }
-          }
-        });
+        industryMap?.set(
+          incident?.data[0]?.row.victims_industry,
+          industryMap?.get(incident?.data[0]?.row.victims_industry)?industryMap?.get(incident?.data[0]?.row.victims_industry) + 1:1
+        );
       });
 
-      data = Array.from(industryMap).map(([name, value], index) => ({
+      console.log(industryMap);
+
+      data = Array?.from(industryMap)?.map(([name, value], index) => ({
         name,
         value,
       }));
 
       // Set the counts from the map sizes
-      setVictimsCount(victimMap.size);
+      setVictimsCount(victimMap?.size);
       setCountryCount(countryMap);
-      console.log(industryMap);
-      setIndustriesCount(industryMap.size);
+      console?.log(industryMap);
+      setIndustriesCount(industryMap?.size);
     };
 
     fetchData();
@@ -146,7 +125,7 @@ const VictimsPage = () => {
         <VictimCard
           icon={Globe}
           title="Affected Countries"
-          value={countryCount.size}
+          value={countryCount?.size}
           color="text-green-600 dark:text-green-400"
         />
         <VictimCard
@@ -173,10 +152,10 @@ const VictimsPage = () => {
                 fill="#8884d8"
                 dataKey="value"
               >
-                {data.map((entry, index) => (
+                {data?.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
+                    fill={COLORS[index % COLORS?.length]}
                   />
                 ))}
               </Pie>
@@ -191,7 +170,7 @@ const VictimsPage = () => {
             Most Affected Regions
           </h2>
           <ul className="space-y-2 text-gray-900 dark:text-gray-100">
-            {Array.from(countryCount).map(([name, value], index) => (
+            {Array?.from(countryCount)?.map(([name, value], index) => (
               <li key={index} className="flex items-center justify-between">
                 <span>{name}</span> {/* Country name */}
                 <span className="font-semibold">{value}</span>{" "}
@@ -210,12 +189,12 @@ const VictimsPage = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search victims..."
+              placeholder="Search victims?.?.?."
               className="border dark:border-gray-700 rounded-full py-2 px-4 pl-10 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e?.target?.value)}
             />
-            <Search className="w-5 h-5 absolute left-3 top-2.5 text-gray-400 dark:text-gray-300" />
+            <Search className="w-5 h-5 absolute left-3 top-2?.5 text-gray-400 dark:text-gray-300" />
           </div>
         </div>
 
@@ -223,8 +202,8 @@ const VictimsPage = () => {
           <VictimItem
             key={index}
             name={item?.threatActor?.name}
-            industry={item?.victims[0]?.industry}
-            country={item?.victims[0]?.country}
+            industry={'Finance'||item?.victims[0]?.industry}
+            country={'India'||item?.victims[0]?.country}
             attackType={item?.category}
           />
         ))}

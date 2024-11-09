@@ -11,6 +11,27 @@ const WorldMapComponent = () => {
     targetedIndustries: 0,
   });
 
+  function getCountryCounts(data) {
+    const countryCounts = {};
+
+    data.forEach((item) => {
+      item.data.forEach((incident) => {
+        const country = incident.row.victims_country;
+        if (countryCounts[country]) {
+          countryCounts[country]++;
+        } else {
+          countryCounts[country] = 1;
+        }
+      });
+    });
+
+    // Transform the countryCounts object into an array of objects
+    return Object.keys(countryCounts).map((country) => ({
+      name: country,
+      count: countryCounts[country],
+    }));
+  }
+
   const fetchStats = async () => {
     try {
       // Fetch attack trend data
@@ -22,6 +43,8 @@ const WorldMapComponent = () => {
         ...prev,
         totalAttacks: attackTrendData?.data?.length,
       }));
+
+      setCountriesData(getCountryCounts(attackTrendData?.data));
 
       // Fetch most affected countries
       const countriesResponse = await fetch(
@@ -272,7 +295,6 @@ const WorldMapComponent = () => {
   const countryToCode = Object.fromEntries(
     Object.entries(countries).map(([code, country]) => [country, code])
   );
-  
 
   const getStyle = ({
     countryValue,
@@ -281,7 +303,7 @@ const WorldMapComponent = () => {
     maxValue,
     color,
   }) => ({
-    fill: countryCode === "US" ? "blue" : 'red',
+    fill: countryCode === "US" ? "blue" : "red",
     fillOpacity: countryValue
       ? 0.1 + (1.5 * (countryValue - minValue)) / (maxValue - minValue)
       : 0,
@@ -307,7 +329,6 @@ const WorldMapComponent = () => {
     flag: getFlagEmoji(code),
   }));
 
-
   useEffect(() => {
     fetchStats();
   }, []);
@@ -323,19 +344,22 @@ const WorldMapComponent = () => {
 
       <div className="h-full  p-8 px-0 md:px-8 pb-4 mb-8 bg-white dark:bg-gray-900">
         <WorldMap
-        // styleFunction={getStyle}
+          // styleFunction={getStyle}
           color="red"
           title="Top 10 Populous Countries"
           value-suffix="people"
           size="responsive"
           className="p-4 bg-black"
           data={countriesData
-            .filter((country) => country?._id) // Filter out items without a valid country code
+            .filter((country) => country?.name) // Filter out items without a valid country code
             .map((country) => {
-              let indexx=country?._id==='USA'?'US':country?._id;
-              return countryToCode[indexx]!==undefined
+              let indexx = country?.name === "USA" ? "US" : country?.name;
+              return countryToCode[indexx] !== undefined
                 ? {
-                    country: countryToCode[indexx]==='USA'?'US':countryToCode[indexx].toLowerCase(), // Convert to lowercase for WorldMap compatibility
+                    country:
+                      countryToCode[indexx] === "USA"
+                        ? "US"
+                        : countryToCode[indexx].toLowerCase(), // Convert to lowercase for WorldMap compatibility
                     value: country?.count, // Using 'count' as the value for the map
                   }
                 : { country: "", value: "" };
@@ -346,7 +370,11 @@ const WorldMapComponent = () => {
       <div className="space-y-2 pl-8 w-full md:w-[50%]">
         {countriesData?.map((item) => (
           <div key={item.country} className="flex items-center text-sm">
-            <span className="w-6 mr-2">{countryToCode[item?._id]?getFlagEmoji(countryToCode[item?._id]):getFlagEmoji('US')}</span>
+            <span className="w-6 mr-2">
+              {countryToCode[item?._id]
+                ? getFlagEmoji(countryToCode[item?._id])
+                : getFlagEmoji("US")}
+            </span>
             <span className="w-20">{item?._id}</span>
             <div className="flex-grow">
               <div className="h-1 bg-gray-700 rounded-full">

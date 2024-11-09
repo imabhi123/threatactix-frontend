@@ -47,6 +47,10 @@ function App() {
                   path="/threat-feed/:id"
                   element={<CyberAttackReportPage />}
                 />
+                 <Route
+                  path="/threat-feed"
+                  element={<CyberAttackReportPage />}
+                />
                 <Route path="/threat-actors" element={<ThreatActorsPage />} />
               </Routes>
             </div>
