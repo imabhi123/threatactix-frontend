@@ -16,7 +16,9 @@ const WorldMapComponent = () => {
 
     data.forEach((item) => {
       item.data.forEach((incident) => {
-        const country = incident.row.victims_country;
+       
+        const country = incident.row.victims_country; console.log(country);
+
         if (countryCounts[country]) {
           countryCounts[country]++;
         } else {
@@ -43,6 +45,7 @@ const WorldMapComponent = () => {
         ...prev,
         totalAttacks: attackTrendData?.data?.length,
       }));
+      console.log(getCountryCounts(attackTrendData?.data))
 
       setCountriesData(getCountryCounts(attackTrendData?.data));
 
@@ -371,11 +374,11 @@ const WorldMapComponent = () => {
         {countriesData?.map((item) => (
           <div key={item.country} className="flex items-center text-sm">
             <span className="w-6 mr-2">
-              {countryToCode[item?._id]
-                ? getFlagEmoji(countryToCode[item?._id])
+              {countryToCode[item?.name]
+                ? getFlagEmoji(countryToCode[item?.name])
                 : getFlagEmoji("US")}
             </span>
-            <span className="w-20">{item?._id}</span>
+            <span className="w-20">{item?.name}</span>
             <div className="flex-grow">
               <div className="h-1 bg-gray-700 rounded-full">
                 <div

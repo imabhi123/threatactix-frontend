@@ -1,8 +1,34 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 
+// Custom Alert Component
+const CustomAlert = ({ type, message, onClose }) => {
+  if (!message) return null;
+
+  return (
+    <div 
+      className={`relative px-4 py-3 rounded-lg border mb-6 ${
+        type === 'error' 
+          ? 'bg-red-50 dark:bg-red-900/30 border-red-400 text-red-700 dark:text-red-200' 
+          : 'bg-green-50 dark:bg-green-900/30 border-green-400 text-green-700 dark:text-green-200'
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <p>{message}</p>
+        <button
+          onClick={onClose}
+          className="ml-4 text-sm opacity-70 hover:opacity-100"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ContactPage = () => {
   const [agreed, setAgreed] = useState(false);
+  const [status, setStatus] = useState({ type: '', message: '' });
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -17,7 +43,48 @@ const ContactPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    
+    if (!agreed) {
+      setStatus({
+        type: 'error',
+        message: 'Please agree to the privacy policy before submitting.'
+      });
+      return;
+    }
+
+    // Construct email body
+    const emailBody = `
+Name: ${formData.firstName} ${formData.lastName}
+Email: ${formData.email}
+
+Message:
+${formData.message}
+    `;
+
+    // Create mailto link
+    const mailtoLink = `mailto:kumarabhishek13909@gmail.com?subject=New Contact Form Submission&body=${encodeURIComponent(emailBody)}`;
+    
+    // Open default email client
+    window.location.href = mailtoLink;
+
+    // Show success message
+    setStatus({
+      type: 'success',
+      message: 'Email client opened! Please send the email from your client.'
+    });
+
+    // Reset form
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      message: '',
+    });
+    setAgreed(false);
+  };
+
+  const clearAlert = () => {
+    setStatus({ type: '', message: '' });
   };
 
   return (
@@ -29,6 +96,12 @@ const ContactPage = () => {
         <p className="text-center mb-12 text-lg text-gray-700 dark:text-gray-300">
           We're here to help! Reach out with any questions or concerns.
         </p>
+
+        <CustomAlert 
+          type={status.type} 
+          message={status.message} 
+          onClose={clearAlert}
+        />
 
         <div className="flex flex-col lg:flex-row lg:justify-between gap-12">
           {/* Contact Form */}
@@ -126,7 +199,8 @@ const ContactPage = () => {
               </div>
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 rounded-md transition duration-300 ease-in-out transform hover:scale-105"
+                disabled={!agreed}
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 rounded-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 Send Message
               </button>
@@ -145,8 +219,8 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <p className="text-gray-700 dark:text-gray-400">Email</p>
-                  <a href="mailto:info@skjflksdjf.io" className="text-lg text-blue-400 hover:underline">
-                    info@skjflksdjf.io
+                  <a href="mailto:kumarabhishek13909@gmail.com" className="text-lg text-blue-400 hover:underline">
+                    kumarabhishek13909@gmail.com
                   </a>
                 </div>
               </div>

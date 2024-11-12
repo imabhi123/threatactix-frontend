@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 const CustomButton = ({ children, className, ...props }) => (
   <button
@@ -21,24 +22,31 @@ const CustomBadge = ({ children, className, ...props }) => (
 
 const PricingCard = () => {
   const [isYearly, setIsYearly] = useState(false);
+  const navigate = useNavigate();
+  const [plans, setPlans] = useState([]);
 
   const togglePricing = () => {
     setIsYearly(!isYearly);
   };
 
-  const pricing = {
-    basic: isYearly ? 468 : 39,
-    researcher: isYearly ? 948 : 79,
-    business: isYearly ? 3600 : 300,
-    enterprise: isYearly ? 6000 : 500,
-  };
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/v1/plans', {
+          method: 'GET'
+        });
+        const resJson = await response.json();
+        setPlans(resJson);
+      } catch (error) {
+        console.error("Error fetching plans:", error);
+      }
+    };
+    fetchPlans();
+  }, []);
 
-  const features = {
-    basic: ['Basic Malware C2 Categories (10-20 types)', 'Common Vulnerabilities and Exposures Database', 'Access to Threat Feed (7 days)'],
-    researcher: ['Medium Malware C2 Categories (20-40 types)', 'Access to Threat Feed (14 days)', '5 Custom Alert Topics'],
-    business: ['Ransomware Analysis Module', 'Custom Alert Topics', 'Slack & Teams Integration'],
-    enterprise: ['Advanced Persistent Threat (APT) Categorization', 'EASM and OSINT Integration', 'Custom Alert Topics'],
-  };
+  const filteredPlans = plans.filter(plan => 
+    isYearly ? plan.duration === 'yearly' : plan.duration === 'monthly'
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4">
@@ -58,20 +66,20 @@ const PricingCard = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {Object.entries({ basic: "Basic", researcher: "Researcher", business: "Business", enterprise: "Enterprise" }).map(([key, title]) => (
+          {filteredPlans.map(plan => (
             <motion.div
-              key={key}
+              key={plan._id}
               className="bg-white dark:bg-gray-800 bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl overflow-hidden shadow-lg"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
               <div className="p-8 flex min-h-full flex-col">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{title}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{plan.name}</h3>
                 <div className="text-4xl font-bold text-purple-600 dark:text-purple-300 mb-6">
-                  ${pricing[key]}<span className="text-lg font-normal text-gray-500 dark:text-gray-400">/{isYearly ? 'year' : 'month'}</span>
+                  ${plan.price}<span className="text-lg font-normal text-gray-500 dark:text-gray-400">/{plan.duration}</span>
                 </div>
                 <ul className="text-gray-700 dark:text-gray-400 mb-8">
-                  {features[key].map((feature, index) => (
+                  {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-center mb-3">
                       <svg className="w-5 h-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
@@ -80,7 +88,7 @@ const PricingCard = () => {
                     </li>
                   ))}
                 </ul>
-                <CustomButton className={'mt-auto'}>
+                <CustomButton onClick={() => navigate('/checkout', { state: { pricing: plan.price, features: plan.features, duration: plan.duration,plan } })} className={'mt-auto'}>
                   Get Started
                 </CustomButton>
               </div>

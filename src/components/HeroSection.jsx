@@ -52,6 +52,7 @@ const Dashboard = () => {
   const [malwares, setMalwares] = useState([]);
   const [industries, setIndustries] = useState([]);
   const navigate = useNavigate();
+  console.log(localStorage.getItem("userId"), "userId");
 
   // Redirect if not authenticated
   if (!localStorage.getItem("token")) {
@@ -71,23 +72,23 @@ const Dashboard = () => {
   function getCountryCounts(data) {
     const countryCounts = {};
 
-    data.forEach(item => {
-        item.data.forEach(incident => {
-            const country = incident.row.victims_country;
-            if (countryCounts[country]) {
-                countryCounts[country]++;
-            } else {
-                countryCounts[country] = 1;
-            }
-        });
+    data.forEach((item) => {
+      item.data.forEach((incident) => {
+        const country = incident.row.victims_country;
+        if (countryCounts[country]) {
+          countryCounts[country]++;
+        } else {
+          countryCounts[country] = 1;
+        }
+      });
     });
 
     // Transform the countryCounts object into an array of objects
-    return Object.keys(countryCounts).map(country => ({
-        name: country,
-        count: countryCounts[country]
+    return Object.keys(countryCounts).map((country) => ({
+      name: country,
+      count: countryCounts[country],
     }));
-}
+  }
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -98,12 +99,13 @@ const Dashboard = () => {
 
         const attackTrendData = await attackTrendResponse.json();
         activeThreats(attackTrendData?.data);
-        const countryCounts=getCountryCounts(attackTrendData?.data);
+        setIncidentsInDateRange(attackTrendData?.data);
+        const countryCounts = getCountryCounts(attackTrendData?.data);
         console.log(attackTrendData?.data, "-->shubh");
         const transformedData = attackTrendData?.data.reduce((acc, item) => {
           const date = item?.createdAt
             ? item.createdAt.split("T")[0]
-            : "2024-10-19T09:48:26.102Z".split("T")[0]; 
+            : "2024-10-19T09:48:26.102Z".split("T")[0];
           if (!acc[date]) {
             acc[date] = { name: date, attacks: 0 }; // Initialize if not present
           }
@@ -126,7 +128,7 @@ const Dashboard = () => {
           }
         );
         const attackInDateRangeData = await attackInDateRange.json();
-        setIncidentsInDateRange(attackInDateRangeData);
+        console.log(attackInDateRangeData, "abhishek");
         const countriesResponse = await fetch(
           "http://localhost:5000/api/v1/incident/incidentss/d/getMostAffectedCountries",
           {
@@ -134,8 +136,7 @@ const Dashboard = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               startDate: "2023-01-01",
-              endDate:
-              endDateToday,
+              endDate: endDateToday,
             }),
           }
         );
@@ -154,9 +155,9 @@ const Dashboard = () => {
           }
         );
         const industriesData = await industriesResponse.json();
-        console.log(attackTrendData?.data,'abhisek')
+        console.log(attackTrendData?.data, "abhisek");
         setStats({
-          totalAttacks: attackTrendData?.data?.length, 
+          totalAttacks: attackTrendData?.data?.length,
           activeThreats: activeThreatsCount,
           affectedCountries: countryCounts.length,
           targetedIndustries: industriesData.length,
@@ -221,7 +222,7 @@ const Dashboard = () => {
           </ResponsiveContainer>
         </div>
 
-        <WorldMapComponent  />
+        <WorldMapComponent />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -233,7 +234,7 @@ const Dashboard = () => {
                 <li key={index} className="flex items-center space-x-2">
                   <Bug className="w-5 h-5 text-red-500" />
                   <span className="text-gray-900 dark:text-gray-100">
-                    {malware.category}
+                    {malware?.data[0]?.row?.threatActor_type}
                   </span>
                 </li>
               ))}
@@ -244,15 +245,15 @@ const Dashboard = () => {
               Most Targeted Industries
             </h2>
             <ul className="space-y-2">
-              {industries.map((industry, index) => (
+              {incidentsInDateRange?.map((industry, index) => (
                 <li key={index} className="flex items-center space-x-2">
                   <Factory className="w-5 h-5 text-blue-500" />
                   <div className="flex items-center justify-between flex-1">
                     <span className="text-gray-900 font-semibold dark:text-gray-100">
-                      {industry._id}
+                      {industry.data[0]?.row?.victims_industry}
                     </span>
                     <span className="text-gray-900 font-semibold dark:text-gray-100">
-                      {industry.count}
+                      {1}
                     </span>
                   </div>
                 </li>
@@ -260,7 +261,7 @@ const Dashboard = () => {
             </ul>
           </div>
         </div>
-        <CampaignList/>
+        <CampaignList />
       </div>
     </div>
   );

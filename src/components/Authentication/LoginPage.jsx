@@ -1,22 +1,23 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Shield } from 'lucide-react';
-import { signInWithGoogle } from '../../firebase';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
-import { loginUser } from '../../apis/api';
-import AdaptivePulsatingSpinner from '../Loading';
+import React, { useState, useContext, useEffect } from "react";
+import { Eye, EyeOff, Shield } from "lucide-react";
+import { signInWithGoogle } from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import { loginUser } from "../../apis/api";
+import AdaptivePulsatingSpinner from "../Loading";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { token, setToken } = useContext(AuthContext);
 
   useEffect(() => {
     if (token) {
-      navigate('/');
+      navigate("/");
     }
   }, [token, navigate]);
 
@@ -30,21 +31,22 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
       const credentials = { email, password };
       const response = await loginUser(credentials);
 
       if (response?.statusCode === 200) {
-        localStorage.setItem('token', response?.data?.accessToken);
+        localStorage.setItem("token", response?.data?.accessToken);
+        localStorage.setItem('userId',response?.data?.user?._id);
         setToken(response?.data?.accessToken);
-        navigate('/dashboard');
+        navigate("/dashboard");
       } else {
-        setError('Invalid email or password');
+        setError("Invalid email or password");
       }
     } catch (error) {
-      setError('Login failed. Please try again.');
+      setError("Login failed. Please try again.");
     }
   };
 
@@ -54,11 +56,11 @@ const LoginPage = () => {
       if (user?.uid) {
         localStorage.setItem("token", user?.accessToken);
         setToken(user?.accessToken);
-        navigate('/dashboard');
+        navigate("/dashboard");
       }
     } catch (error) {
       setLoading(false);
-      console.error('Google sign-in error:', error);
+      console.error("Google sign-in error:", error);
     }
   };
 
@@ -71,19 +73,29 @@ const LoginPage = () => {
       <div className="flex-1 max-w-[100%] flex py-12 flex-col justify-center px-12">
         <div className="flex relative items-center mb-8">
           <Shield className="w-8 h-8 text-blue-500 dark:text-red-500 mr-2" />
-          <h1 className="text-3xl md:text-5xl font-bold">Threatactix-The C&C Blacklist</h1>
+          <h1 className="text-3xl md:text-5xl font-bold">
+            Threatactix-The C&C Blacklist
+          </h1>
         </div>
         <h2 className="text-2xl md:text-3xl  font-bold mb-8">
-          "Shifting from shadows to the spotlight: <span className="text-red-500 dark:text-red-500">we uncover, unveil, and blacklist malicious actors</span> to safeguard your business."
+          "Shifting from shadows to the spotlight:{" "}
+          <span className="text-red-500 dark:text-red-500">
+            we uncover, unveil, and blacklist malicious actors
+          </span>{" "}
+          to safeguard your business."
         </h2>
         <ul className="space-y-3 text-xl">
           {[
-            'APT (Advanced Persistent Threat) vs. ABT (Adversary Behavior Tracker)',
-            'Adversary Behavior Tracker: Monitoring key indicators of malicious intent.',
-            'Behavioral Blueprint of Attackers: Spot tactics before they threaten your business.'
+            "APT (Advanced Persistent Threat) vs. ABT (Adversary Behavior Tracker)",
+            "Adversary Behavior Tracker: Monitoring key indicators of malicious intent.",
+            "Behavioral Blueprint of Attackers: Spot tactics before they threaten your business.",
           ].map((feature, index) => (
             <li key={index} className="flex items-center">
-              <svg className="w-5 h-5 text-blue-500 dark:text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                className="w-5 h-5 text-blue-500 dark:text-green-500 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -96,7 +108,11 @@ const LoginPage = () => {
         </ul>
         <div className="mt-8 text-xs text-gray-500 dark:text-gray-300">
           Powered by
-          <img src="/api/placeholder/100/20" alt="Technisanct logo" className="inline-block ml-2" />
+          <img
+            src="/api/placeholder/100/20"
+            alt="Technisanct logo"
+            className="inline-block ml-2"
+          />
         </div>
       </div>
       <div className="w-full lg:w-[40%] bg-gray-100 dark:bg-gray-900 p-8 flex flex-col justify-center items-center">
@@ -107,7 +123,10 @@ const LoginPage = () => {
           </p>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium mb-1 text-gray-600 dark:text-gray-400"
+              >
                 Email
               </label>
               <input
@@ -119,22 +138,41 @@ const LoginPage = () => {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-1 text-gray-600 dark:text-gray-400">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-400"
+              >
                 Password
               </label>
-              <input
-                type="password"
-                id="password"
-                className="w-full outline-none px-3 py-2 bg-gray-100 dark:bg-black rounded-md border border-gray-300 dark:border-gray-700"
-                value={password}
-                onChange={handlePasswordChange}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  className="w-full outline-none px-3 py-2 bg-gray-100 dark:bg-black rounded-md border border-gray-300 dark:border-gray-700"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
             {error && <p className="text-red-500">{error}</p>}
             <a href="#" className="text-blue-500 dark:text-green-500 text-sm">
               Forgot password?
             </a>
-            <button type="submit" className="w-full bg-blue-500 dark:bg-green-500 text-white py-2 rounded-md font-medium">
+            <button
+              type="submit"
+              className="w-full bg-blue-500 dark:bg-green-500 text-white py-2 rounded-md font-medium"
+            >
               Sign in
             </button>
           </form>
@@ -154,7 +192,7 @@ const LoginPage = () => {
           </div>
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <a href="#" className="text-blue-500 dark:text-green-500">
                 Sign up
               </a>

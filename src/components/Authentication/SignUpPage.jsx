@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Shield } from "lucide-react";
+import { Eye, EyeOff, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { signInWithGoogle } from "../../firebase";
 import { AuthContext } from "../../context/AuthContext";
@@ -8,6 +8,7 @@ import AdaptivePulsatingSpinner from "../Loading";
 const SignUpPage = () => {
   const navigate = useNavigate();
   const { token, setToken } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -174,19 +175,25 @@ const SignUpPage = () => {
               />
             </div>
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-400"
-              >
+              <label htmlFor="password" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-400">
                 Password
               </label>
-              <input
-                type="password"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full outline-none px-3 py-2 bg-gray-100 dark:bg-black rounded-md border border-gray-300 dark:border-gray-700"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full outline-none px-3 py-2 bg-gray-100 dark:bg-black rounded-md border border-gray-300 dark:border-gray-700"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <a href="#" className="text-green-500 text-sm">

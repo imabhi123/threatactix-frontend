@@ -18,6 +18,7 @@ import CyberAttackReportPage from "./pages/ThreatFeed";
 import ThreatActorsPage from "./pages/ThreatActors";
 import UserProfile from "./pages/ProfilePage";
 import PromotionBar from "./components/Header/PromotionBar";
+import ModernCheckout from "./components/payments/ModernCheckout";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/dashboard" element={<ExtremeHeroSection />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/checkout" element={<ModernCheckout />} />
                 <Route path="/blogs" element={<Blogs />} />
                 <Route path="/blog-detail" element={<BlogCard />} />
                 <Route path="/contact" element={<Contact />} />
@@ -47,7 +49,7 @@ function App() {
                   path="/threat-feed/:id"
                   element={<CyberAttackReportPage />}
                 />
-                 <Route
+                <Route
                   path="/threat-feed"
                   element={<CyberAttackReportPage />}
                 />
