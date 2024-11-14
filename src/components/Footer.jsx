@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin, Send } from 'lucide-react';
 
-const Footer = () => {
+const Footer = ({isVisible}) => {
   return (
-    <footer className="bg-gray-100 text-gray-700 dark:bg-gray-900 px-[4%] md:px-[10%] dark:text-gray-300 relative top-[64px] pt-16 pb-8">
+    <footer className={`bg-gray-100 text-gray-700 dark:bg-gray-900 px-[4%] md:px-[10%] dark:text-gray-300 relative ${isVisible?'top-[64px]':'top[24px]'} pt-16 pb-8`}>
       <div className="max-w-7xl mx-auto ">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}

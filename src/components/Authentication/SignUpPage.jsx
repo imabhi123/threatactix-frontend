@@ -57,7 +57,7 @@ const SignUpPage = () => {
     try {
       setLoading(true);
       console.log(process.env.BASE_URL)
-      const response = await fetch("http://localhost:5000/api/v1" + "/user/register", {
+      const response = await fetch("https://threatactix-backend.onrender.com/api/v1" + "/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,10 +115,6 @@ const SignUpPage = () => {
             </li>
           ))}
         </ul>
-        <div className="mt-8 text-xs text-gray-500 dark:text-gray-300">
-          Powered by
-          <img src="/api/placeholder/100/20" alt="Technisanct logo" className="inline-block ml-2" />
-        </div>
       </div>
       <div className="w-full lg:w-[40%] bg-gray-200 dark:bg-gray-900 p-4 lg:p-8 flex flex-col justify-center items-center">
         <div className="w-full max-w-[400px] flex flex-col justify-center">

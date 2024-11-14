@@ -96,13 +96,13 @@ const LandingPage = () => {
               and intelligence.
             </p>
             <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium">
-              Start free trial →
+              Start free trial <span className="font-[900]">→</span>
             </button>
           </div>
         </div>
 
         {/* Background Globe Effect */}
-        <div className="absolute inset-0 overflow-hidden opacity-20">
+        <div className="absolute inset-0 z-[20] min-h-[140vh] overflow-hidden opacity-20">
           <img
             src="https://d1898qjf7hzy9p.cloudfront.net/icons/globe-cropped.png"
             alt="Globe network"

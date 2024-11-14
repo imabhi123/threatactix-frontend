@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CustomButton = ({ children, className, ...props }) => (
   <button
@@ -23,16 +24,27 @@ const CustomBadge = ({ children, className, ...props }) => (
 const PricingCard = () => {
   const [isYearly, setIsYearly] = useState(false);
   const navigate = useNavigate();
+  const [promotion,setPromotion]=useState({});
   const [plans, setPlans] = useState([]);
 
   const togglePricing = () => {
     setIsYearly(!isYearly);
   };
 
+  const fetchPromotion=async()=>{
+    try {
+      const response=await axios.get('https://threatactix-backend.onrender.com/api/v1/promo/promocodes');
+      console.log(response.data,'promo')
+      setPromotion(response.data[0]);
+    } catch (error) {
+      
+    }
+  }
+
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/v1/plans', {
+        const response = await fetch('https://threatactix-backend.onrender.com/api/v1/plans', {
           method: 'GET'
         });
         const resJson = await response.json();
@@ -41,6 +53,7 @@ const PricingCard = () => {
         console.error("Error fetching plans:", error);
       }
     };
+    fetchPromotion()
     fetchPlans();
   }, []);
 
@@ -81,14 +94,14 @@ const PricingCard = () => {
                 <ul className="text-gray-700 dark:text-gray-400 mb-8">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-center mb-3">
-                      <svg className="w-5 h-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="min-w-5 max-w-5 min-h-5 max-h-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
                       {feature}
                     </li>
                   ))}
                 </ul>
-                <CustomButton onClick={() => navigate('/checkout', { state: { pricing: plan.price, features: plan.features, duration: plan.duration,plan } })} className={'mt-auto'}>
+                <CustomButton onClick={() => navigate('/checkout', { state: {promo:promotion, pricing: plan.price, features: plan.features, duration: plan.duration,plan } })} className={'mt-auto'}>
                   Get Started
                 </CustomButton>
               </div>

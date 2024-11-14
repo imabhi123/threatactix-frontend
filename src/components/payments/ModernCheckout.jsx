@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 const CustomCheckout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.state);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -15,6 +14,25 @@ const CustomCheckout = () => {
     gst: "",
   });
 
+  // Calculate discounted price based on promo
+  const calculateDiscountedPrice = () => {
+    const basePrice = location.state?.pricing || 0;
+    const promo = location.state?.promo;
+
+    if (!promo) return basePrice;
+
+    if (promo.discountType === "percentage") {
+      const discount = (basePrice * promo.discountValue) / 100;
+      return basePrice - discount;
+    } else if (promo.discountType === "fixed") {
+      return basePrice - promo.discountValue;
+    }
+
+    return basePrice;
+  };
+
+  const finalPrice = calculateDiscountedPrice();
+
   const handleSubmit = async (userId, planId) => {
     try {
       const { fullName, email, phone, city, pincode, gst } = formData;
@@ -23,7 +41,7 @@ const CustomCheckout = () => {
         return;
       }
       const response = await fetch(
-        "http://localhost:5000/api/v1/user/purchase-plan",
+        "https://threatactix-backend.onrender.com/api/v1/user/purchase-plan",
         {
           method: "POST",
           headers: {
@@ -33,6 +51,8 @@ const CustomCheckout = () => {
             userId,
             planId,
             formData,
+            promoCode: location.state?.promo?.code,
+            finalPrice,
           }),
         }
       );
@@ -44,14 +64,13 @@ const CustomCheckout = () => {
           navigate("/dashboard");
         }, 2000);
       } else {
-        toast.error("Error purchasing plan:", data.message);
+        toast.error(`Error purchasing plan: ${data.message}`);
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  // Redirect if no token is found
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/login");
@@ -67,10 +86,7 @@ const CustomCheckout = () => {
   };
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 
-                    dark:from-gray-900 dark:to-gray-800 p-6"
-    >
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 p-6">
       <div className="mt-8 mx-auto">
         {/* Header */}
         <div className="mb-8 space-y-2">
@@ -114,119 +130,26 @@ const CustomCheckout = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {"Full Name"}{" "}
-                      {true && <span className="text-red-500">*</span>}
-                    </label>
-                    <input
-                      type={"text"}
-                      name={"fullName"}
-                      placeholder={"Enter your full name"}
-                      value={formData["fullName"]} // Ensure input value is tied to state
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
-                 bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
-                 transition-all duration-200 ease-in-out
-                 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {"Email Address"}{" "}
-                      {true && <span className="text-red-500">*</span>}
-                    </label>
-                    <input
-                      type={"email"}
-                      name={"email"}
-                      placeholder={"you@example.com"}
-                      value={formData["email"]} // Ensure input value is tied to state
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
-                 bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
-                 transition-all duration-200 ease-in-out
-                 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {"Phone Number"}{" "}
-                      {true && <span className="text-red-500">*</span>}
-                    </label>
-                    <input
-                      type={"text"}
-                      name={"phone"}
-                      placeholder={"Enter your phone number"}
-                      value={formData["phone"]} // Ensure input value is tied to state
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
-                 bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
-                 transition-all duration-200 ease-in-out
-                 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {"City"} {true && <span className="text-red-500">*</span>}
-                    </label>
-                    <input
-                      type={"text"}
-                      name={"city"}
-                      placeholder={"Enter your city"}
-                      value={formData["city"]} // Ensure input value is tied to state
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
-                 bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
-                 transition-all duration-200 ease-in-out
-                 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {"Pincode"}{" "}
-                      {true && <span className="text-red-500">*</span>}
-                    </label>
-                    <input
-                      type={"text"}
-                      name={"pincode"}
-                      placeholder={"Enter your pincode"}
-                      value={formData["pincode"]} // Ensure input value is tied to state
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
-                 bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
-                 transition-all duration-200 ease-in-out
-                 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                      autoComplete="off"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {"GST Number (Optional)"}{" "}
-                      {true && <span className="text-red-500">*</span>}
-                    </label>
-                    <input
-                      type={"text"}
-                      name={"gst"}
-                      placeholder={"Enter GST number"}
-                      value={formData["gst"]} // Ensure input value is tied to state
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 
-                 bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
-                 transition-all duration-200 ease-in-out
-                 placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                      autoComplete="off"
-                    />
-                  </div>
+                  {/* Input fields for Personal Details */}
+                  {["fullName", "email", "phone", "city", "pincode", "gst"].map(
+                    (field, index) => (
+                      <div key={index} className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {field.charAt(0).toUpperCase() + field.slice(1)}{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type={field === "email" ? "email" : "text"}
+                          name={field}
+                          placeholder={`Enter your ${field}`}
+                          value={formData[field]}
+                          onChange={handleInputChange}
+                          className="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all duration-200 ease-in-out placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                          autoComplete="off"
+                        />
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </div>
@@ -234,7 +157,6 @@ const CustomCheckout = () => {
 
           {/* Summary Section */}
           <div className="lg:col-span-1">
-            {/* Order Summary Card */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-700 transition-all duration-200 ease-in-out">
               <div className="space-y-6">
                 <div className="flex items-center space-x-2 pb-4 border-b dark:border-gray-700">
@@ -283,34 +205,41 @@ const CustomCheckout = () => {
                       ${location.state?.pricing || "0.00"}
                     </span>
                   </div>
-                  <div className="pt-4 border-t dark:border-gray-700">
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                        Total
+
+                  {/* Promo Code Display */}
+                  {location.state?.promo && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        Promo Applied
                       </span>
-                      <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                        ${location.state?.pricing || "0.00"}
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        - {location.state?.promo.discountValue}{" "}
+                        {location.state?.promo.discountType === "percentage"
+                          ? "%"
+                          : "$"}
                       </span>
                     </div>
-                  </div>
+                  )}
                 </div>
 
-                <button
-                  className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 
-                                 dark:bg-blue-500 dark:hover:bg-blue-600
-                                 text-white font-medium rounded-lg
-                                 transform transition-all duration-200 ease-in-out
-                                 hover:scale-[1.02] active:scale-[0.98]"
-                  onClick={() =>
-                    handleSubmit(
-                      localStorage.getItem("userId"),
-                      location.state.plan?._id
-                    )
-                  }
-                >
-                  Place Order
-                </button>
+                <hr className="border-gray-200 dark:border-gray-700" />
+
+                <div className="flex justify-between font-semibold text-lg">
+                  <span className="text-gray-900 dark:text-white">Total</span>
+                  <span className="text-blue-600 dark:text-blue-400">
+                    ${finalPrice.toFixed(2)}
+                  </span>
+                </div>
               </div>
+
+              <button
+                onClick={() =>
+                  handleSubmit(location.state?.userId, location.state?.plan?.id)
+                }
+                className="w-full bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 dark:focus:ring-blue-400 text-white py-3 rounded-lg mt-6 transition-all duration-200 ease-in-out font-semibold text-lg"
+              >
+                Purchase Plan
+              </button>
             </div>
           </div>
         </div>

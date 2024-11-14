@@ -12,6 +12,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Assuming you're using react-router
 import { endDateToday } from "../utils/utils";
+import AdaptivePulsatingSpinner from "../components/Loading";
 
 const AttackCard = ({ title, value, icon: Icon, color }) => (
   <div
@@ -60,6 +61,7 @@ const AttacksPage = () => {
   const [timeRange, setTimeRange] = useState("7d");
   const [data, setData] = useState([]);
   const [incidentsInDateRange, setIncidentsInDateRange] = useState([]);
+  const [loading,setLoading]=useState(false);
   const [stats, setStats] = useState({
     totalAttacks: 0,
     activeThreats: 0,
@@ -130,11 +132,14 @@ const AttacksPage = () => {
     }));
   }
 
+  
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
+        setLoading(true)
         const attackTrendResponse = await axios.get(
-          "http://localhost:5000/api/v1/incident/incidents"
+          "https://threatactix-backend.onrender.com/api/v1/incident/incidents"
         );
         const attackTrendData = attackTrendResponse.data;
         console.log(attackTrendData?.data);
@@ -142,7 +147,7 @@ const AttacksPage = () => {
         const countryCounts = getCountryCounts(attackTrendData?.data);
         console.log(countryCounts, "abhishek");
         const industriesResponse = await fetch(
-          "http://localhost:5000/api/v1/incident/incidents/getMostTargetedIndustries",
+          "https://threatactix-backend.onrender.com/api/v1/incident/incidents/getMostTargetedIndustries",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -179,7 +184,7 @@ const AttacksPage = () => {
         setData(Object.values(groupedData) || []);
 
         const attackInDateRangeResponse = await fetch(
-          "http://localhost:5000/api/v1/incident/incidents/dates",
+          "https://threatactix-backend.onrender.com/api/v1/incident/incidents/dates",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -193,7 +198,7 @@ const AttacksPage = () => {
         setIncidentsInDateRange(attackInDateRangeData);
 
         const countriesResponse = await fetch(
-          "http://localhost:5000/api/v1/incident/incidents/getMostAffectedCountries",
+          "https://threatactix-backend.onrender.com/api/v1/incident/incidents/getMostAffectedCountries",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -214,18 +219,23 @@ const AttacksPage = () => {
           affectedCountries: countryCounts.length,
           targetedIndustries: industriesData.length,
         });
-
+        setLoading(false)
         setMalwareDistribution(
           countAttacksByCategory(attackTrendData?.data || [])
         );
         activeThreats(attackTrendData?.data || []);
       } catch (error) {
+        setLoading(false)
         console.error("Error fetching dashboard data:", error);
       }
     };
 
     fetchStats();
   }, [activeThreatsCount]);
+
+  if (loading) {
+    return <AdaptivePulsatingSpinner/>;
+  }
 
   if (!data.length) return <p>Loading...</p>;
 

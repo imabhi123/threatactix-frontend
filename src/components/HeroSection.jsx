@@ -94,7 +94,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const attackTrendResponse = await fetch(
-          "http://localhost:5000/api/v1/incident/incidents"
+          "https://threatactix-backend.onrender.com/api/v1/incident/incidents"
         );
 
         const attackTrendData = await attackTrendResponse.json();
@@ -117,7 +117,7 @@ const Dashboard = () => {
         console.log(finalData);
         setData(finalData);
         const attackInDateRange = await fetch(
-          "http://localhost:5000/api/v1/incident/incidents/dates",
+          "https://threatactix-backend.onrender.com/api/v1/incident/incidents/dates",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -130,7 +130,7 @@ const Dashboard = () => {
         const attackInDateRangeData = await attackInDateRange.json();
         console.log(attackInDateRangeData, "abhishek");
         const countriesResponse = await fetch(
-          "http://localhost:5000/api/v1/incident/incidentss/d/getMostAffectedCountries",
+          "https://threatactix-backend.onrender.com/api/v1/incident/incidentss/d/getMostAffectedCountries",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -144,7 +144,7 @@ const Dashboard = () => {
 
         console.log(countriesData, "-->countries data");
         const industriesResponse = await fetch(
-          "http://localhost:5000/api/v1/incident/incidents/getMostTargetedIndustries",
+          "https://threatactix-backend.onrender.com/api/v1/incident/incidents/getMostTargetedIndustries",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -261,7 +261,7 @@ const Dashboard = () => {
             </ul>
           </div>
         </div>
-        <CampaignList />
+        {/* <CampaignList /> */}
       </div>
     </div>
   );

@@ -19,8 +19,11 @@ import ThreatActorsPage from "./pages/ThreatActors";
 import UserProfile from "./pages/ProfilePage";
 import PromotionBar from "./components/Header/PromotionBar";
 import ModernCheckout from "./components/payments/ModernCheckout";
+import { useState } from "react";
 
 function App() {
+  const [isVisible, setIsVisible] = useState(true);
+console.log(isVisible)
   return (
     <AuthProvider>
       <ThemeProvider>
@@ -29,8 +32,8 @@ function App() {
         <Router>
           <div className="no_scroll overflow-x-hidden">
             {/* <PromotionBar/> */}
-            <Navbar />
-            <div className="relative top-[100px] px-[4%] md:px-[10%] bg-gray-100 dark:bg-gray-900">
+            <Navbar isVisible={isVisible} setIsVisible={setIsVisible} />
+            <div className={`relative ${isVisible ? 'top-[100px]' : 'top-[48px]'} px-[4%] md:px-[10%] bg-gray-100 dark:bg-gray-900`}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/dashboard" element={<ExtremeHeroSection />} />
@@ -56,7 +59,7 @@ function App() {
                 <Route path="/threat-actors" element={<ThreatActorsPage />} />
               </Routes>
             </div>
-            <Footer />
+            <Footer isVisible={isVisible} />
           </div>
         </Router>
       </ThemeProvider>

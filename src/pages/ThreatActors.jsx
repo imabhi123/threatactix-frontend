@@ -36,8 +36,10 @@ const ThreatActorsPage = () => {
   const fetchIncidentData = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get('http://localhost:5000/api/v1/incident/incidents');
+      const { data } = await axios.get('https://threatactix-backend.onrender.com/api/v1/incident/incidents');
+      console.log(data)
       setMalwareDistribution(countAttacksByCategory(data?.data));
+      console.log(countAttacksByCategory(data?.data))
       activeThreats(data?.data);
       setIncidentData(data?.data);
       setLoading(false);
@@ -59,13 +61,15 @@ const ThreatActorsPage = () => {
   const countAttacksByCategory = useCallback((incidentData) => {
     const categoryCount = {};
     incidentData.forEach((incident) => {
-      const category = incident.category;
+      const category = incident?.data[0]?.row?.category;
+      console.log(category)
       if (categoryCount[category]) {
-        categoryCount[category] += incident?.victims?.length;
+        categoryCount[category] += 1;
       } else {
         categoryCount[category] = 1;
       }
     });
+    
     return Object.keys(categoryCount).map((category) => ({
       name: category,
       count: categoryCount[category],
@@ -124,14 +128,14 @@ const ThreatActorsPage = () => {
                   <td className="p-3">
                     <div className="flex items-center">
                       <div className="w-fit text-nowrap px-3 h-fit bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded-lg flex items-center justify-center mr-3">
-                        {actor?.threatActor?.name}
+                        {actor?.data[0]?.row?.threatActor_name}
                       </div>
                     </div>
                   </td>
                   <td className="p-3">
                     {actor.category !== '-' && (
                       <span className="bg-yellow-300 text-nowrap dark:bg-yellow-400 text-orange-800 dark:text-orange-900 text-xs font-medium px-2 py-1 rounded">
-                        {actor?.category}
+                        {actor?.data[0]?.row?.category}
                       </span>
                     )}
                   </td>

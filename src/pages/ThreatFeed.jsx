@@ -105,7 +105,7 @@
 //     const fetchData = async () => {
 //       try {
 //         const response = await fetch(
-//           `http://localhost:5000/api/v1/incident/incidents/${id}`
+//           `https://threatactix-backend.onrender.com/api/v1/incident/incidents/${id}`
 //         );
 //         const resJson = await response.json();
 //         setData(resJson);
@@ -296,7 +296,7 @@ const CyberAttackReportPage = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:5000/api/v1/incident/incidents/${id}`
+          `https://threatactix-backend.onrender.com/api/v1/incident/incidents/${id}`
         );
         const resJson = await response.json();
         setData(resJson);
@@ -375,7 +375,7 @@ const CyberAttackReportPage = () => {
 
         <Card>
           <div className="p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600 mb-6">
+            {/* <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600 mb-6">
               {title || "CyberDataPhantomsTeam Targets Organization"}
             </h2>
             
@@ -384,7 +384,7 @@ const CyberAttackReportPage = () => {
               <span className="font-medium">
                 Published: {new Date(publicationDate).toLocaleDateString()}
               </span>
-            </div>
+            </div> */}
 
             <div className="mt-6 space-y-8">
               <div className="flex items-center space-x-2 mb-6">

@@ -38,7 +38,7 @@ const WorldMapComponent = () => {
     try {
       // Fetch attack trend data
       const attackTrendResponse = await fetch(
-        "http://localhost:5000/api/v1/incident/incidents"
+        "https://threatactix-backend.onrender.com/api/v1/incident/incidents"
       );
       const attackTrendData = await attackTrendResponse.json();
       setStats((prev) => ({
@@ -51,7 +51,7 @@ const WorldMapComponent = () => {
 
       // Fetch most affected countries
       const countriesResponse = await fetch(
-        "http://localhost:5000/api/v1/incident/incidents/getMostAffectedCountries",
+        "https://threatactix-backend.onrender.com/api/v1/incident/incidents/getMostAffectedCountries",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -71,7 +71,7 @@ const WorldMapComponent = () => {
 
       // Fetch most targeted industries
       const industriesResponse = await fetch(
-        "http://localhost:5000/api/v1/incident/incidents/getMostTargetedIndustries",
+        "https://threatactix-backend.onrender.com/api/v1/incident/incidents/getMostTargetedIndustries",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

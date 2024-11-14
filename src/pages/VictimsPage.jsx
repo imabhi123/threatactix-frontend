@@ -57,7 +57,7 @@ const VictimsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const attackTrendResponse = await fetch(
-        "http://localhost:5000/api/v1/incident/incidents"
+        "https://threatactix-backend.onrender.com/api/v1/incident/incidents"
       );
       const attackTrendData = await attackTrendResponse?.json();
       console?.log(attackTrendData?.data);
@@ -194,7 +194,7 @@ const VictimsPage = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e?.target?.value)}
             />
-            <Search className="w-5 h-5 absolute left-3 top-2?.5 text-gray-400 dark:text-gray-300" />
+            <Search className="w-5 h-5 absolute left-3 top-2.5 text-gray-400 dark:text-gray-300" />
           </div>
         </div>
 

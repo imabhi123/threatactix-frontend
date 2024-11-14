@@ -1,11 +1,14 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom';
 
 const BlogCard = () => {
+  const location=useLocation();
+  console.log(location.state)
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-300">
       <div className="bg-gray-100 dark:bg-gray-800 py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold text-black dark:text-white mb-2">Blog Title Here</h1>
+          <h1 className="text-4xl font-bold text-black dark:text-white mb-2">{location.state.title}</h1>
           <p className="text-gray-900 dark:text-gray-400">Published on April 4, 2023</p>
         </div>
       </div>
@@ -14,20 +17,15 @@ const BlogCard = () => {
         <div className="container mx-auto px-4 flex flex-col md:flex-row">
           <div className="w-full md:w-3/4 px-4">
             <img
-              src="https://images.unsplash.com/photo-1506157786151-b8491531f063"
+              src={location.state.image}
               alt="Blog Featured Image"
-              className="mb-8 rounded-lg"
+              className="mb-8 w-full rounded-lg"
             />
-            <div className="prose prose-dark max-w-none">
+            <div className="prose line-clamp-6 prose-dark max-w-none">
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                facilisi. Sed sit amet feugiat eros, eget eleifend dolor. Proin
-                maximus bibendum felis, id fermentum odio vestibulum id. Sed ac
-                ligula eget dolor consequat tincidunt. Nullam fringilla ipsum et
-                ex lacinia, at bibendum elit posuere. Aliquam eget leo nec nibh
-                mollis consectetur.
+                {location.state.description}
               </p>
-              <p>
+              {/* <p>
                 Suspendisse potenti. Mauris euismod, magna sit amet aliquam
                 dapibus, ex sapien porta nisl, vel auctor orci velit in risus.
                 Fusce gravida bibendum dui, id volutpat felis dignissim a. Duis
@@ -42,7 +40,7 @@ const BlogCard = () => {
                 Nulla facilisi. Sed venenatis pretium ante, sed tempor turpis
                 sagittis ac. Pellentesque habitant morbi tristique senectus et
                 netus et malesuada fames ac turpis egestas.
-              </p>
+              </p> */}
             </div>
           </div>
 

@@ -106,14 +106,6 @@ const LoginPage = () => {
             </li>
           ))}
         </ul>
-        <div className="mt-8 text-xs text-gray-500 dark:text-gray-300">
-          Powered by
-          <img
-            src="/api/placeholder/100/20"
-            alt="Technisanct logo"
-            className="inline-block ml-2"
-          />
-        </div>
       </div>
       <div className="w-full lg:w-[40%] bg-gray-100 dark:bg-gray-900 p-8 flex flex-col justify-center items-center">
         <div className="w-[400px] max-w-full flex flex-col justify-center">
