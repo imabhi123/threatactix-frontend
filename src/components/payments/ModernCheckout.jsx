@@ -35,6 +35,7 @@ const CustomCheckout = () => {
 
   const handleSubmit = async (userId, planId) => {
     try {
+      console.log(location.state)
       const { fullName, email, phone, city, pincode, gst } = formData;
       if (!fullName || !email || !phone || !city || !pincode || !gst) {
         toast.error("Please fill in all fields before submitting");
@@ -48,8 +49,8 @@ const CustomCheckout = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId,
-            planId,
+            userId:localStorage.getItem('userId'),
+            planId:location.state.plan._id,
             formData,
             promoCode: location.state?.promo?.code,
             finalPrice,
