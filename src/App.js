@@ -32,8 +32,8 @@ console.log(isVisible)
         <Router>
           <div className="no_scroll overflow-x-hidden">
             {/* <PromotionBar/> */}
-            <Navbar isVisible={isVisible} setIsVisible={setIsVisible} />
-            <div className={`relative ${isVisible ? 'top-[100px]' : 'top-[48px]'} px-[4%] md:px-[10%] bg-gray-100 dark:bg-gray-900`}>
+          <Navbar isVisible={isVisible} setIsVisible={setIsVisible} />
+            <div className={`relative ${isVisible ? 'top-[104px]' : 'top-[48px]'} px-[4%] md:px-[10%] bg-gray-100 dark:bg-gray-900`}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/dashboard" element={<ExtremeHeroSection />} />
@@ -68,3 +68,44 @@ console.log(isVisible)
 }
 
 export default App;
+
+// frontend/src/App.jsx
+// App.jsx
+// import React from 'react';
+// import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
+// const App = () => {
+//   const initialOptions = {
+//     "client-id": "AXqTo3Rw_wnrK8hXEAJnPYJxg_8Ab-bdScpo7xq-UIV6qYbhxNDGq5Ij05mz6jLdZDLbr6ZG_B8HREHF", // Replace with your actual client ID
+//     currency: "USD",
+//     intent: "capture"
+//   };
+
+//   return (
+//     <PayPalScriptProvider options={initialOptions}>
+//       <div className="App">
+//         <h1>PayPal Checkout</h1>
+//         <PayPalButtons 
+//           createOrder={(data, actions) => {
+//             return actions.order.create({
+//               purchase_units: [
+//                 {
+//                   amount: {
+//                     value: "99.99",
+//                   },
+//                 },
+//               ],
+//             });
+//           }}
+//           onApprove={(data, actions) => {
+//             return actions.order.capture().then((details) => {
+//               alert("Transaction completed by " + details.payer.name.given_name);
+//             });
+//           }}
+//         />
+//       </div>
+//     </PayPalScriptProvider>
+//   );
+// };
+
+// export default App;

@@ -32,20 +32,47 @@ const SignUpPage = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const user = await signInWithGoogle();
+      const user = await signInWithGoogle(); // Perform Google sign-in
+      console.log(user);
+  
       if (user?.uid) {
-        setToken(user?.accessToken);
-        navigate("/");
+        // Send user data to your backend to create or verify the user
+        const response = await fetch(
+          "http://localhost:5000/api/v1/user/google-register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firstName: user.displayName?.split(" ")[0], // Assuming displayName is "FirstName LastName"
+              lastName: user.displayName?.split(" ")[1] || "",
+              email: user.email,
+              uid: user.uid, // Unique identifier from Google
+            }),
+          }
+        );
+  
+        const data = await response.json();
+  
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to register with Google");
+        }
+  
+        setToken(user?.accessToken); // Save token locally
+        navigate("/"); // Navigate to the home page
       }
+  
       console.log(user?.accessToken);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       console.error("Google sign-in error:", error);
+    } finally {
+      setLoading(false);
     }
   };
+  
 
-  if(loading)return <AdaptivePulsatingSpinner/>;
+  if (loading) return <AdaptivePulsatingSpinner />;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,26 +83,28 @@ const SignUpPage = () => {
 
     try {
       setLoading(true);
-      console.log(process.env.BASE_URL)
-      const response = await fetch("https://threatactix-backend.onrender.com/api/v1" + "/user/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          password,
-        }),
-      });
+      console.log(process.env.BASE_URL);
+      const response = await fetch(
+        "http://localhost:5000/api/v1" + "/user/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            password,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to register");
-      }
-      else navigate("/login");
+      } else navigate("/login");
 
       setLoading(false);
     } catch (error) {
@@ -89,22 +118,32 @@ const SignUpPage = () => {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-white dark:bg-black text-black dark:text-white">
-       <div className="flex-1 max-w-[100%] flex py-12 flex-col justify-center px-12">
-        <div className="flex relative items-center mb-8">
+      <div className="flex-1 max-w-[100%] flex py-12 flex-col justify-center px-12">
+        <div className="flex relative items-center mb-[20%]">
           <Shield className="w-8 h-8 text-blue-500 dark:text-red-500 mr-2" />
-          <h1 className="text-3xl md:text-5xl font-bold">Threatactix-The C&C Blacklist</h1>
+          <h1 className="text-3xl md:text-5xl font-bold">
+            Threatactix-The C&C Blacklist
+          </h1>
         </div>
-        <h2 className="text-2xl md:text-3xl  font-bold mb-8">
-          "Shifting from shadows to the spotlight: <span className="text-red-500 dark:text-red-500">we uncover, unveil, and blacklist malicious actors</span> to safeguard your business."
+        <h2 className="text-2xl md:text-3xl  font-bold mb-[10%]">
+          "Shifting from shadows to the spotlight:{" "}
+          <span className="text-red-500 dark:text-red-500">
+            we uncover, unveil, and blacklist malicious actors
+          </span>{" "}
+          to safeguard your business."
         </h2>
         <ul className="space-y-3 text-xl">
           {[
-            'APT (Advanced Persistent Threat) vs. ABT (Adversary Behavior Tracker)',
-            'Adversary Behavior Tracker: Monitoring key indicators of malicious intent.',
-            'Behavioral Blueprint of Attackers: Spot tactics before they threaten your business.'
+            "APT (Advanced Persistent Threat) vs. ABT (Adversary Behavior Tracker)",
+            "Adversary Behavior Tracker: Monitoring key indicators of malicious intent.",
+            "Behavioral Blueprint of Attackers: Spot tactics before they threaten your business.",
           ].map((feature, index) => (
             <li key={index} className="flex items-center">
-              <svg className="w-5 h-5 text-blue-500 dark:text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                className="w-5 h-5 text-blue-500 dark:text-green-500 mr-2"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -171,7 +210,10 @@ const SignUpPage = () => {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-400">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-400"
+              >
                 Password
               </label>
               <div className="relative">
@@ -187,7 +229,11 @@ const SignUpPage = () => {
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute inset-y-0 right-3 flex items-center text-gray-500"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>

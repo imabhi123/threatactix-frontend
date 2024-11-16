@@ -100,7 +100,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const response = await fetch(
-          "https://threatactix-backend.onrender.com/api/v1/incident/incidents"
+          "http://localhost:5000/api/v1/incident/incidents"
         );
         const attackTrendData = await response.json();
         

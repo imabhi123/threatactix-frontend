@@ -36,7 +36,7 @@ const ThreatActorsPage = () => {
   const fetchIncidentData = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get('https://threatactix-backend.onrender.com/api/v1/incident/incidents');
+      const { data } = await axios.get('http://localhost:5000/api/v1/incident/incidents');
       console.log(data)
       setMalwareDistribution(countAttacksByCategory(data?.data));
       console.log(countAttacksByCategory(data?.data))

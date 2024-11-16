@@ -13,7 +13,7 @@ const ExtremeBlogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get("https://threatactix-backend.onrender.com/api/v1/blogs");
+      const response = await axios.get("http://localhost:5000/api/v1/blogs");
       console.log(response.data);
       setBlogs(response.data);
     } catch (error) {}

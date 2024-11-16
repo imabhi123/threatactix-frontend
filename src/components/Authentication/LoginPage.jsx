@@ -53,14 +53,41 @@ const LoginPage = () => {
   const handleGoogleSignIn = async () => {
     try {
       const user = await signInWithGoogle();
+  
       if (user?.uid) {
-        localStorage.setItem("token", user?.accessToken);
-        setToken(user?.accessToken);
-        navigate("/dashboard");
+        // Send Google user details to the backend for authentication/registration
+        const response = await fetch(
+          "http://localhost:5000/api/v1/user/google-login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firstName: user.displayName?.split(" ")[0],
+              lastName: user.displayName?.split(" ")[1] || "",
+              email: user.email,
+              uid: user.uid,
+            }),
+          }
+        );
+  
+        const data = await response.json();
+  
+        if (response.ok && data?.accessToken) {
+          localStorage.setItem("token", data.accessToken);
+          localStorage.setItem("userId", data?.user?._id);
+          setToken(data.accessToken);
+          navigate("/dashboard");
+        } else {
+          setError(data?.message || "Google sign-in failed.");
+        }
       }
     } catch (error) {
-      setLoading(false);
+      setError("Google sign-in failed. Please try again.");
       console.error("Google sign-in error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,13 +98,13 @@ const LoginPage = () => {
   return (
     <div className="flex max-w-full flex-wrap min-h-screen bg-white text-black dark:bg-black dark:text-white">
       <div className="flex-1 max-w-[100%] flex py-12 flex-col justify-center px-12">
-        <div className="flex relative items-center mb-8">
+        <div className="flex relative items-center mb-[20%]">
           <Shield className="w-8 h-8 text-blue-500 dark:text-red-500 mr-2" />
           <h1 className="text-3xl md:text-5xl font-bold">
             Threatactix-The C&C Blacklist
           </h1>
         </div>
-        <h2 className="text-2xl md:text-3xl  font-bold mb-8">
+        <h2 className="text-2xl md:text-3xl  font-bold mb-[10%]">
           "Shifting from shadows to the spotlight:{" "}
           <span className="text-red-500 dark:text-red-500">
             we uncover, unveil, and blacklist malicious actors

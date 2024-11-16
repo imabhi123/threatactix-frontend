@@ -52,7 +52,7 @@ const CyberAttackReportPage = () => {
 
   const fetchFeeds = async () => {
     try {
-        const response = await fetch('https://threatactix-backend.onrender.com/api/v1/threats/threatfeeds');
+        const response = await fetch('http://localhost:5000/api/v1/threats/threatfeeds');
         const data = await response.json();
         const newArray=data?.map(item=>item?.url);
         setRssUrls(newArray)
@@ -71,7 +71,7 @@ useEffect(()=>{
       try {
         setLoading(true);
         const response = await fetch(
-          `https://threatactix-backend.onrender.com/api/v1/incident/incidents/${id}`
+          `http://localhost:5000/api/v1/incident/incidents/${id}`
         );
         const resJson = await response.json();
         setData(resJson);

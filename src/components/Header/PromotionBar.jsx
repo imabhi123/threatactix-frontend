@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 const PromotionBar = ({ isVisible, setIsVisible }) => {
   const [isFixed, setIsFixed] = useState(false);
   const [promotion, setPromotion] = useState({});
@@ -10,9 +11,8 @@ const PromotionBar = ({ isVisible, setIsVisible }) => {
   const fetchPromotion = async () => {
     try {
       const response = await axios.get(
-        "https://threatactix-backend.onrender.com/api/v1/promo/promocodes"
+        "http://localhost:5000/api/v1/promo/promocodes"
       );
-      console.log(response.data, "promo");
       setPromotion(response.data[0]);
     } catch (error) {
       console.log(error?.message);
@@ -28,7 +28,6 @@ const PromotionBar = ({ isVisible, setIsVisible }) => {
 
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup listener
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -38,42 +37,63 @@ const PromotionBar = ({ isVisible, setIsVisible }) => {
 
   return (
     <>
-      {/* Placeholder div to prevent content jump when banner becomes fixed */}
-      {isFixed && <div className="h-[52px]" />}
+      {/* Placeholder to prevent content jump */}
+      {isFixed && <div className="h-[54px]" />}
 
       <div
-        className={`w-full min-h-[54px] bg-gradient-to-r from-blue-600 to-teal-500 text-white px-4 py-3 text-center
-        ${isFixed ? "fixed top-0 left-0 z-50 animate-slide-down" : "relative"}`}
+        className={`w-full min-h-[54px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-4 py-3 text-center shadow-lg ${
+          isFixed ? "fixed top-0 left-0 z-50 animate-slide-down" : "relative"
+        }`}
       >
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-sm font-medium">
+        <div className="flex items-center justify-center gap-4">
+          <span
+            className="text-base font-semibold line-clamp-1 flex items-center"
+            title={`${promotion?.discountValue}${
+              promotion?.discountType === "fixed" ? "$" : "%"
+            } off for your first invoice with code: ${promotion?.code}`}
+          >
+            🎉{" "}
             {promotion?.discountValue}
             {promotion?.discountType === "fixed" ? "$" : "%"} off for your first
-            invoice with code: {promotion?.code}
+            invoice with code: <span className="font-bold">{promotion?.code}</span>
           </span>
-          <span className="text-sm">-</span>
-          <span className="text-sm">
-            Valid till{" "}
-            {new Date(promotion.expiryDate).toLocaleDateString("en-US", {
+
+          <span className="text-base font-medium">|</span>
+
+          <span
+            className="text-base font-semibold line-clamp-1 flex items-center"
+            title={`Valid till ${new Date(
+              promotion.expiryDate
+            ).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
-            })}
+            })}`}
+          >
+            🕒 Valid till{" "}
+            <span className="font-bold">
+              {new Date(promotion.expiryDate).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
           </span>
+
           <button
             onClick={() => navigate("/pricing")}
-            className="ml-2 px-4 py-1 text-sm bg-white text-gray-800 rounded-md hover:bg-gray-100 transition-colors"
+            className="ml-4 px-6 py-2 text-sm font-medium text-gray-800 bg-white rounded-full shadow-md hover:bg-gray-200 transition-transform transform hover:scale-105"
           >
-            Subscribe now
+            🚀 Subscribe Now
           </button>
         </div>
 
         <button
           onClick={() => setIsVisible(false)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-full transition-colors"
+          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-white/10 rounded-full transition-colors"
           aria-label="Close promotion"
         >
-          <X size={16} />
+          <X size={18} />
         </button>
       </div>
 
@@ -88,7 +108,7 @@ const PromotionBar = ({ isVisible, setIsVisible }) => {
         }
 
         .animate-slide-down {
-          animation: slide-down 0.3s ease forwards;
+          animation: slide-down 0.4s ease-out forwards;
         }
       `}</style>
     </>

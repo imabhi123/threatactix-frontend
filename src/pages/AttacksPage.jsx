@@ -139,7 +139,7 @@ const AttacksPage = () => {
       try {
         setLoading(true)
         const attackTrendResponse = await axios.get(
-          "https://threatactix-backend.onrender.com/api/v1/incident/incidents"
+          "http://localhost:5000/api/v1/incident/incidents"
         );
         const attackTrendData = attackTrendResponse.data;
         console.log(attackTrendData?.data);
@@ -147,7 +147,7 @@ const AttacksPage = () => {
         const countryCounts = getCountryCounts(attackTrendData?.data);
         console.log(countryCounts, "abhishek");
         const industriesResponse = await fetch(
-          "https://threatactix-backend.onrender.com/api/v1/incident/incidents/getMostTargetedIndustries",
+          "http://localhost:5000/api/v1/incident/incidents/getMostTargetedIndustries",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -184,7 +184,7 @@ const AttacksPage = () => {
         setData(Object.values(groupedData) || []);
 
         const attackInDateRangeResponse = await fetch(
-          "https://threatactix-backend.onrender.com/api/v1/incident/incidents/dates",
+          "http://localhost:5000/api/v1/incident/incidents/dates",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -198,7 +198,7 @@ const AttacksPage = () => {
         setIncidentsInDateRange(attackInDateRangeData);
 
         const countriesResponse = await fetch(
-          "https://threatactix-backend.onrender.com/api/v1/incident/incidents/getMostAffectedCountries",
+          "http://localhost:5000/api/v1/incident/incidents/getMostAffectedCountries",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

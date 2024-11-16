@@ -57,7 +57,7 @@ const VictimsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const attackTrendResponse = await fetch(
-        "https://threatactix-backend.onrender.com/api/v1/incident/incidents"
+        "http://localhost:5000/api/v1/incident/incidents"
       );
       const attackTrendData = await attackTrendResponse?.json();
       console?.log(attackTrendData?.data);

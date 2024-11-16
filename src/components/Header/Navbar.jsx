@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
-import logo from "../../assets/images/logo_main.jpeg";
+import logo from "../../assets/images/logo_full.jpg";
 import { ThemeContext } from "../../context/ThemeContext";
 import PromotionBar from "./PromotionBar";
 
@@ -79,7 +79,7 @@ const Navbar = ({isVisible, setIsVisible}) => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
-              <img className="h-8 w-auto" src={logo} alt="Logo" />
+              <img className="h-12 bg-white rounded-sm w-auto" src={logo} alt="Logo" />
             </Link>
           </div>
           <div className="hidden md:block">

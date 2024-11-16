@@ -33,6 +33,23 @@ const CustomCheckout = () => {
 
   const finalPrice = calculateDiscountedPrice();
 
+  const createPayment = async (amount) => {
+    const response = await fetch("http://localhost:5000/api/v1/payments/create-payment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({amount: "10.00"}),
+    });
+  
+    if (!response.ok) {
+      throw new Error("Failed to create payment");
+    }
+  
+    return response.json(); // Returns { approvalUrl }
+  };
+  
+
   const handleSubmit = async (userId, planId) => {
     try {
       console.log(location.state)
@@ -42,7 +59,7 @@ const CustomCheckout = () => {
         return;
       }
       const response = await fetch(
-        "https://threatactix-backend.onrender.com/api/v1/user/purchase-plan",
+        "http://localhost:5000/api/v1/user/purchase-plan",
         {
           method: "POST",
           headers: {
@@ -70,6 +87,7 @@ const CustomCheckout = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+    // createPayment(finalPrice);
   };
 
   useEffect(() => {
