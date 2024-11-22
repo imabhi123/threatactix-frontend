@@ -129,6 +129,12 @@ useEffect(()=>{
   const { title, publicationDate } = data;
   const currentItems = rssFeed.slice(0, currentPage * ITEMS_PER_PAGE);
 
+  function extractTextFromHTML(htmlString) {
+    // Remove all HTML tags using regex
+    const text = htmlString.replace(/<[^>]*>/g, '');
+    return text.trim(); // Trim whitespace from the result
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
@@ -170,7 +176,7 @@ useEffect(()=>{
                         {item.title}
                       </h4>
                       <p className="text-gray-600 dark:text-gray-400 line-clamp-3 text-sm leading-relaxed">
-                        {item.description}
+                        {extractTextFromHTML(item.description)}
                       </p>
                     </a>
                   </li>

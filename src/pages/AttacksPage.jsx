@@ -61,7 +61,7 @@ const AttacksPage = () => {
   const [timeRange, setTimeRange] = useState("7d");
   const [data, setData] = useState([]);
   const [incidentsInDateRange, setIncidentsInDateRange] = useState([]);
-  const [loading,setLoading]=useState(false);
+  const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
     totalAttacks: 0,
     activeThreats: 0,
@@ -132,17 +132,16 @@ const AttacksPage = () => {
     }));
   }
 
-  
-
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
         const attackTrendResponse = await axios.get(
           "http://localhost:5000/api/v1/incident/incidents"
         );
         const attackTrendData = attackTrendResponse.data;
         console.log(attackTrendData?.data);
+        setIncidentsInDateRange(attackTrendData?.data);
         activeThreats(attackTrendData?.data);
         const countryCounts = getCountryCounts(attackTrendData?.data);
         console.log(countryCounts, "abhishek");
@@ -158,6 +157,7 @@ const AttacksPage = () => {
           }
         );
         const industriesData = await industriesResponse.json();
+        console.log(industriesData,'adjk')
         setIndustries(industriesData);
         setStats((prevStats) => ({
           ...prevStats,
@@ -195,7 +195,8 @@ const AttacksPage = () => {
           }
         );
         const attackInDateRangeData = await attackInDateRangeResponse.json();
-        setIncidentsInDateRange(attackInDateRangeData);
+        console.log(attackInDateRangeData,'abhsk')
+        
 
         const countriesResponse = await fetch(
           "http://localhost:5000/api/v1/incident/incidents/getMostAffectedCountries",
@@ -211,21 +212,19 @@ const AttacksPage = () => {
         const countriesData = await countriesResponse.json();
         setCountriesData(countriesData);
 
-        
-
         setStats({
           totalAttacks: attackTrendData?.data?.length || 0,
           activeThreats: activeThreatsCount,
           affectedCountries: countryCounts.length,
           targetedIndustries: industriesData.length,
         });
-        setLoading(false)
+        setLoading(false);
         setMalwareDistribution(
           countAttacksByCategory(attackTrendData?.data || [])
         );
         activeThreats(attackTrendData?.data || []);
       } catch (error) {
-        setLoading(false)
+        setLoading(false);
         console.error("Error fetching dashboard data:", error);
       }
     };
@@ -234,7 +233,7 @@ const AttacksPage = () => {
   }, [activeThreatsCount]);
 
   if (loading) {
-    return <AdaptivePulsatingSpinner/>;
+    return <AdaptivePulsatingSpinner />;
   }
 
   if (!data.length) return <p>Loading...</p>;
@@ -310,9 +309,9 @@ const AttacksPage = () => {
         {incidentsInDateRange.map((incident, index) => (
           <AttackItem
             key={index}
-            date={incident.date}
-            type={incident.category}
-            target={incident.victims[0]?.industry}
+            date={incident?.data[0]?.row?.publicationDate}
+            type={incident?.data[0]?.row?.category}
+            target={incident?.data[0]?.row?.victims_industry}
             severity={incident.severity}
           />
         ))}

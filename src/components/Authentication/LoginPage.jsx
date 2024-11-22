@@ -40,6 +40,7 @@ const LoginPage = () => {
       if (response?.statusCode === 200) {
         localStorage.setItem("token", response?.data?.accessToken);
         localStorage.setItem('userId',response?.data?.user?._id);
+        localStorage.setItem('user',JSON.stringify(response?.data?.user));
         setToken(response?.data?.accessToken);
         navigate("/dashboard");
       } else {

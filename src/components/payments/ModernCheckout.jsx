@@ -34,25 +34,27 @@ const CustomCheckout = () => {
   const finalPrice = calculateDiscountedPrice();
 
   const createPayment = async (amount) => {
-    const response = await fetch("http://localhost:5000/api/v1/payments/create-payment", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({amount: "10.00"}),
-    });
-  
+    const response = await fetch(
+      "http://localhost:5000/api/v1/payments/create-payment",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: "10.00" }),
+      }
+    );
+
     if (!response.ok) {
       throw new Error("Failed to create payment");
     }
-  
+
     return response.json(); // Returns { approvalUrl }
   };
-  
 
   const handleSubmit = async (userId, planId) => {
     try {
-      console.log(location.state)
+      console.log(location.state);
       const { fullName, email, phone, city, pincode, gst } = formData;
       if (!fullName || !email || !phone || !city || !pincode || !gst) {
         toast.error("Please fill in all fields before submitting");
@@ -66,11 +68,11 @@ const CustomCheckout = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId:localStorage.getItem('userId'),
-            planId:location.state.plan._id,
+            userId: localStorage.getItem("userId"),
+            planId: location.state.plan._id,
             formData,
             promoCode: location.state?.promo?.code,
-            finalPrice,
+            finalPrice:location.state?.pricing || "0.00",
           }),
         }
       );
@@ -226,7 +228,7 @@ const CustomCheckout = () => {
                   </div>
 
                   {/* Promo Code Display */}
-                  {location.state?.promo && (
+                  {/* {location.state?.promo && (
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">
                         Promo Applied
@@ -238,7 +240,7 @@ const CustomCheckout = () => {
                           : "$"}
                       </span>
                     </div>
-                  )}
+                  )} */}
                 </div>
 
                 <hr className="border-gray-200 dark:border-gray-700" />
@@ -246,7 +248,7 @@ const CustomCheckout = () => {
                 <div className="flex justify-between font-semibold text-lg">
                   <span className="text-gray-900 dark:text-white">Total</span>
                   <span className="text-blue-600 dark:text-blue-400">
-                    ${finalPrice.toFixed(2)}
+                  ${location.state?.pricing || "0.00"}
                   </span>
                 </div>
               </div>

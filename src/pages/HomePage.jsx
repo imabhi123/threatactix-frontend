@@ -92,7 +92,7 @@ const LandingPage = () => {
         </div>
 
         {/* Background Globe Effect */}
-        <div className="absolute inset-0 z-[20] min-h-[140vh] overflow-hidden opacity-20">
+        <div className="absolute inset-0 z-[1] min-h-[140vh] overflow-hidden opacity-[1] dark:opacity-20">
           <img
             src="https://d1898qjf7hzy9p.cloudfront.net/icons/globe-cropped.png"
             alt="Globe network"
@@ -102,13 +102,13 @@ const LandingPage = () => {
       </div>
 
       {/* Features Section */}
-      <div className="px-4 sm:px-6 lg:px-8 py-20">
+      <div className="px-4 sm:px-6 relative z-10 lg:px-8 py-20">
         <h2 className="text-2xl font-semibold mb-12">WHAT YOU GET</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50"
+              className="p-6 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50/75 dark:bg-gray-900/50"
             >
               <div className="mb-4 text-blue-500 dark:text-blue-400">
                 {feature.icon}

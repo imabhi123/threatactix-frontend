@@ -199,7 +199,7 @@ const Dashboard = () => {
               Recent Malware
             </h2>
             <ul className="space-y-2">
-              {incidentsInDateRange?.slice(0, 3).map((malware, index) => (
+              {incidentsInDateRange?.slice(0, 5).map((malware, index) => (
                 <li key={index} className="flex items-center space-x-2">
                   <Bug className="w-5 h-5 text-red-500" />
                   <span className="text-gray-900 dark:text-gray-100">

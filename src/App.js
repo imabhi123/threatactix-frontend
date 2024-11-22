@@ -20,9 +20,10 @@ import UserProfile from "./pages/ProfilePage";
 import PromotionBar from "./components/Header/PromotionBar";
 import ModernCheckout from "./components/payments/ModernCheckout";
 import { useState } from "react";
+import PaymentButton from "./components/PaymentButton";
 
 function App() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 console.log(isVisible)
   return (
     <AuthProvider>
@@ -64,6 +65,7 @@ console.log(isVisible)
         </Router>
       </ThemeProvider>
     </AuthProvider>
+    // <PaymentButton/>
   );
 }
 

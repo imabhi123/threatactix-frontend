@@ -2,13 +2,14 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
-import logo from "../../assets/images/logo_full.jpg";
+import logo from "../../assets/images/threatactix_logo_dark.png";
 import { ThemeContext } from "../../context/ThemeContext";
 import PromotionBar from "./PromotionBar";
 
-const Navbar = ({isVisible, setIsVisible}) => {
+const Navbar = ({ isVisible, setIsVisible }) => {
   const { token, signOut } = useContext(AuthContext);
-  const { theme: isDarkMode, toggleTheme: toggleDarkMode } = useContext(ThemeContext);
+  const { theme: isDarkMode, toggleTheme: toggleDarkMode } =
+    useContext(ThemeContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -22,7 +23,7 @@ const Navbar = ({isVisible, setIsVisible}) => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-    
+
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
@@ -31,7 +32,7 @@ const Navbar = ({isVisible, setIsVisible}) => {
 
     window.addEventListener("scroll", handleScroll);
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleClickOutside);
@@ -44,9 +45,10 @@ const Navbar = ({isVisible, setIsVisible}) => {
   };
 
   const navLinkClass = `relative px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200
-    ${isDarkMode
-      ? "text-gray-300 hover:text-white hover:bg-gray-700"
-      : "text-gray-700 hover:text-black hover:bg-gray-200"
+    ${
+      isDarkMode
+        ? "text-gray-300 hover:text-white hover:bg-gray-700"
+        : "text-gray-700 hover:text-black hover:bg-gray-200"
     }`;
 
   const activeNavLinkClass = `${navLinkClass} ${
@@ -64,22 +66,27 @@ const Navbar = ({isVisible, setIsVisible}) => {
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-300 ease-in-out
-      ${isScrolled
-        ? isDarkMode
-          ? "bg-gray-900 shadow-lg"
-          : "bg-white shadow-md"
-        : isDarkMode
-        ? "bg-gray-800"
-        : "bg-gray-50"
+      ${
+        isScrolled
+          ? isDarkMode
+            ? "bg-gray-900 shadow-lg"
+            : "bg-white shadow-md"
+          : isDarkMode
+          ? "bg-gray-800"
+          : "bg-gray-50"
       }
       ${isMenuOpen ? "h-screen md:h-auto" : ""}`}
     >
-      <PromotionBar setIsVisible={setIsVisible} isVisible={isVisible} />
+      {/* <PromotionBar setIsVisible={setIsVisible} isVisible={isVisible} /> */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
-              <img className="h-12 bg-white rounded-sm w-auto" src={logo} alt="Logo" />
+              <img
+                className="h-12  rounded-sm w-auto"
+                src={logo}
+                alt="Logo"
+              />
             </Link>
           </div>
           <div className="hidden md:block">
@@ -88,18 +95,30 @@ const Navbar = ({isVisible, setIsVisible}) => {
                 <>
                   <Link
                     to="/dashboard"
-                    className={location.pathname === "/dashboard" ? activeNavLinkClass : navLinkClass}
+                    className={
+                      location.pathname === "/dashboard"
+                        ? activeNavLinkClass
+                        : navLinkClass
+                    }
                   >
                     Dashboard
                   </Link>
-                  <div className="relative inline-block text-left" ref={dropdownRef}>
+                  <div
+                    className="relative inline-block text-left"
+                    ref={dropdownRef}
+                  >
                     <button
                       onClick={() => setDropdownOpen(!dropdownOpen)}
                       className={`${navLinkClass} inline-flex items-center`}
                       aria-expanded={dropdownOpen}
                       aria-haspopup="true"
                     >
-                      Threats <ChevronDown className={`ml-1 h-4 w-4 transform transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                      Threats{" "}
+                      <ChevronDown
+                        className={`ml-1 h-4 w-4 transform transition-transform duration-200 ${
+                          dropdownOpen ? "rotate-180" : ""
+                        }`}
+                      />
                     </button>
                     {dropdownOpen && (
                       <div
@@ -126,16 +145,44 @@ const Navbar = ({isVisible, setIsVisible}) => {
                 </>
               )}
               {/* Rest of the navigation links */}
-              <Link to="/pricing" className={location.pathname === "/pricing" ? activeNavLinkClass : navLinkClass}>
+              <Link
+                to="/pricing"
+                className={
+                  location.pathname === "/pricing"
+                    ? activeNavLinkClass
+                    : navLinkClass
+                }
+              >
                 Pricing
               </Link>
-              <Link to="/docs" className={location.pathname === "/docs" ? activeNavLinkClass : navLinkClass}>
+              {/* <Link
+                to="/docs"
+                className={
+                  location.pathname === "/docs"
+                    ? activeNavLinkClass
+                    : navLinkClass
+                }
+              >
                 Docs
-              </Link>
-              <Link to="/blogs" className={location.pathname === "/blogs" ? activeNavLinkClass : navLinkClass}>
+              </Link> */}
+              <Link
+                to="/blogs"
+                className={
+                  location.pathname === "/blogs"
+                    ? activeNavLinkClass
+                    : navLinkClass
+                }
+              >
                 Blogs
               </Link>
-              <Link to="/contact" className={location.pathname === "/contact" ? activeNavLinkClass : navLinkClass}>
+              <Link
+                to="/contact"
+                className={
+                  location.pathname === "/contact"
+                    ? activeNavLinkClass
+                    : navLinkClass
+                }
+              >
                 Contact
               </Link>
             </div>
@@ -144,7 +191,9 @@ const Navbar = ({isVisible, setIsVisible}) => {
             <div className="ml-4 flex items-center md:ml-6">
               <button
                 onClick={toggleDarkMode}
-                className={`p-2 rounded-full ${isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"} transition-colors duration-200`}
+                className={`p-2 rounded-full ${
+                  isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"
+                } transition-colors duration-200`}
               >
                 {isDarkMode ? (
                   <Sun className="h-5 text-white w-5" />
@@ -160,9 +209,10 @@ const Navbar = ({isVisible, setIsVisible}) => {
                   <Link
                     to="/signup"
                     className={`ml-4 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200
-                    ${isDarkMode
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-blue-500 text-white hover:bg-blue-600"
+                    ${
+                      isDarkMode
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        : "bg-blue-500 text-white hover:bg-blue-600"
                     }`}
                   >
                     Create Account
@@ -173,7 +223,10 @@ const Navbar = ({isVisible, setIsVisible}) => {
                   <Link to="/profile" className={`${navLinkClass} ml-4`}>
                     Profile
                   </Link>
-                  <button onClick={handleSignOut} className={`${navLinkClass} ml-4`}>
+                  <button
+                    onClick={handleSignOut}
+                    className={`${navLinkClass} ml-4`}
+                  >
                     Sign out
                   </button>
                 </>
@@ -184,9 +237,10 @@ const Navbar = ({isVisible, setIsVisible}) => {
             <button
               onClick={toggleMenu}
               className={`inline-flex items-center justify-center p-2 rounded-md 
-              ${isDarkMode
-                ? "text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                : "text-gray-700 hover:text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
+              ${
+                isDarkMode
+                  ? "text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                  : "text-gray-700 hover:text-black hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
               }`}
             >
               <span className="sr-only">Open main menu</span>
@@ -210,7 +264,11 @@ const Navbar = ({isVisible, setIsVisible}) => {
                   Dashboard
                 </Link>
                 {dropdownItems.map((item) => (
-                  <Link key={item.to} to={item.to} className={navLinkClass + " block"}>
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className={navLinkClass + " block"}
+                  >
                     {item.label}
                   </Link>
                 ))}
@@ -219,9 +277,9 @@ const Navbar = ({isVisible, setIsVisible}) => {
             <Link to="/pricing" className={navLinkClass + " block"}>
               Pricing
             </Link>
-            <Link to="/docs" className={navLinkClass + " block"}>
+            {/* <Link to="/docs" className={navLinkClass + " block"}>
               Docs
-            </Link>
+            </Link> */}
             <Link to="/blogs" className={navLinkClass + " block"}>
               Blogs
             </Link>
@@ -233,15 +291,22 @@ const Navbar = ({isVisible, setIsVisible}) => {
             <div className="flex items-center px-5">
               {!token ? (
                 <>
-                  <Link to="/login" className={navLinkClass + " block px-3 py-2 rounded-md text-base font-medium"}>
+                  <Link
+                    to="/login"
+                    className={
+                      navLinkClass +
+                      " block px-3 py-2 rounded-md text-base font-medium"
+                    }
+                  >
                     Sign in
                   </Link>
                   <Link
                     to="/signup"
                     className={`ml-4 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200
-                    ${isDarkMode
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "bg-blue-500 text-white hover:bg-blue-600"
+                    ${
+                      isDarkMode
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        : "bg-blue-500 text-white hover:bg-blue-600"
                     }`}
                   >
                     Create Account
@@ -249,17 +314,31 @@ const Navbar = ({isVisible, setIsVisible}) => {
                 </>
               ) : (
                 <>
-                  <Link to="/profile" className={navLinkClass + " block px-3 py-2 rounded-md text-base font-medium"}>
+                  <Link
+                    to="/profile"
+                    className={
+                      navLinkClass +
+                      " block px-3 py-2 rounded-md text-base font-medium"
+                    }
+                  >
                     Profile
                   </Link>
-                  <button onClick={handleSignOut} className={navLinkClass + " block px-3 py-2 rounded-md text-base font-medium"}>
+                  <button
+                    onClick={handleSignOut}
+                    className={
+                      navLinkClass +
+                      " block px-3 py-2 rounded-md text-base font-medium"
+                    }
+                  >
                     Sign out
                   </button>
                 </>
               )}
               <button
                 onClick={toggleDarkMode}
-                className={`ml-auto p-2 rounded-full ${isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"} transition-colors duration-200`}
+                className={`ml-auto p-2 rounded-full ${
+                  isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"
+                } transition-colors duration-200`}
               >
                 {isDarkMode ? (
                   <Sun className="h-5 text-white w-5" />

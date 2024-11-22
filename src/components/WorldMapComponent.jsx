@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { WorldMap } from "react-svg-worldmap";
-import "leaflet/dist/leaflet.css";
+// import "leaflet/dist/leaflet.css";
 
 const WorldMapComponent = () => {
   const [countriesData, setCountriesData] = useState([]);
@@ -349,7 +349,7 @@ const WorldMapComponent = () => {
         <WorldMap
           // styleFunction={getStyle}
           color="red"
-          title="Top 10 Populous Countries"
+          title="Most Affected Countries"
           value-suffix="people"
           size="responsive"
           className="p-4 bg-black"
@@ -371,7 +371,7 @@ const WorldMapComponent = () => {
       </div>
 
       <div className="space-y-2 pl-8 w-full md:w-[50%]">
-        {countriesData?.map((item) => (
+        {countriesData?.slice(0,5).map((item) => (
           <div key={item.country} className="flex items-center text-sm">
             <span className="w-6 mr-2">
               {countryToCode[item?.name]
@@ -379,14 +379,14 @@ const WorldMapComponent = () => {
                 : getFlagEmoji("US")}
             </span>
             <span className="w-20">{item?.name}</span>
-            <div className="flex-grow">
+            {/* <div className="flex-grow">
               <div className="h-1 bg-gray-700 rounded-full">
                 <div
                   className="h-full bg-red-500 rounded-full"
                   style={{ width: `${item.value}%` }}
                 ></div>
               </div>
-            </div>
+            </div> */}
             <span className="w-8 text-right">{item.value}</span>
             <span className="w-8 text-right text-gray-500">({item.count})</span>
           </div>
