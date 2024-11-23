@@ -73,6 +73,7 @@ const CustomCheckout = () => {
             formData,
             promoCode: location.state?.promo?.code,
             finalPrice:location.state?.pricing || "0.00",
+            duration:location.state?.duration
           }),
         }
       );
