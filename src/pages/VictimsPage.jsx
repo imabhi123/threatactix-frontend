@@ -57,7 +57,15 @@ const VictimsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const attackTrendResponse = await fetch(
-        "http://localhost:5000/api/v1/incident/incidents"
+        "http://localhost:5000/api/v1/incident/incidentsss",{
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId:localStorage.getItem('userId')
+          })
+        }
       );
       const attackTrendData = await attackTrendResponse?.json();
       console?.log(attackTrendData?.data);
@@ -106,7 +114,7 @@ const VictimsPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
       <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100">
-        Victim Analysis
+        Ransomeware Victim Analysis
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -170,7 +178,7 @@ const VictimsPage = () => {
             Most Affected Regions
           </h2>
           <ul className="space-y-2 text-gray-900 dark:text-gray-100">
-            {Array?.from(countryCount)?.map(([name, value], index) => (
+            {Array?.from(countryCount)?.slice(0,10).map(([name, value], index) => (
               <li key={index} className="flex items-center justify-between">
                 <span>{name}</span> {/* Country name */}
                 <span className="font-semibold">{value}</span>{" "}
@@ -198,7 +206,7 @@ const VictimsPage = () => {
           </div>
         </div>
 
-        {incident?.map((item, index) => (
+        {incident?.slice(0,5).map((item, index) => (
           <VictimItem
             key={index}
             name={item?.threatActor?.name}

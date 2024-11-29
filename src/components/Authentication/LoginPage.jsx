@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { loginUser } from "../../apis/api";
 import AdaptivePulsatingSpinner from "../Loading";
+import axios from "axios";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -29,6 +30,26 @@ const LoginPage = () => {
     setPassword(e.target.value);
   };
 
+  const createLoginNotification = async (userId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/notification",
+        {
+          type: "login",
+          title: "User Login",
+          message: "You have successfully logged in to your account.",
+          time: new Date().toISOString(),
+          userId: userId,
+        }
+      );
+
+      return response.data.notification;
+    } catch (error) {
+      console.error("Failed to create logout notification:", error);
+      return null;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -41,6 +62,7 @@ const LoginPage = () => {
         localStorage.setItem("token", response?.data?.accessToken);
         localStorage.setItem('userId',response?.data?.user?._id);
         localStorage.setItem('user',JSON.stringify(response?.data?.user));
+        createLoginNotification(localStorage.getItem('userId'));
         setToken(response?.data?.accessToken);
         navigate("/dashboard");
       } else {
@@ -78,6 +100,7 @@ const LoginPage = () => {
         if (response.ok && data?.accessToken) {
           localStorage.setItem("token", data.accessToken);
           localStorage.setItem("userId", data?.user?._id);
+          console.log(data?.user?._id,'user--->id')
           setToken(data.accessToken);
           navigate("/dashboard");
         } else {

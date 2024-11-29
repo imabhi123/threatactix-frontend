@@ -137,7 +137,15 @@ const AttacksPage = () => {
       try {
         setLoading(true);
         const attackTrendResponse = await axios.get(
-          "http://localhost:5000/api/v1/incident/incidents"
+          "http://localhost:5000/api/v1/incident/incidentsss",{
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId:localStorage.getItem('userId')
+            })
+          }
         );
         const attackTrendData = attackTrendResponse.data;
         console.log(attackTrendData?.data);

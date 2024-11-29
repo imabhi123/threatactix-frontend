@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -52,6 +53,45 @@ const CustomCheckout = () => {
     return response.json(); // Returns { approvalUrl }
   };
 
+  const createLoginNotification = async (userId,plan) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/notification",
+        {
+          type: "plan-purchase",
+          title: "Plan Purchased",
+          message: `You have successfully purchased ${plan} plan`,
+          time: new Date().toISOString(),
+          userId: userId,
+        }
+      );
+
+      return response.data.notification;
+    } catch (error) {
+      console.error("Failed to create logout notification:", error);
+      return null;
+    }
+  };
+
+  const sendPurchaseMail = async (email, planDetails) => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/auth/send-purchase-confirmation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, planDetails }),
+        }
+      );
+      const resJson = await response.json();
+      console.log(resJson);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const handleSubmit = async (userId, planId) => {
     try {
       console.log(location.state);
@@ -72,8 +112,8 @@ const CustomCheckout = () => {
             planId: location.state.plan._id,
             formData,
             promoCode: location.state?.promo?.code,
-            finalPrice:location.state?.pricing || "0.00",
-            duration:location.state?.duration
+            finalPrice: location.state?.pricing || "0.00",
+            duration: location.state?.duration,
           }),
         }
       );
@@ -81,6 +121,10 @@ const CustomCheckout = () => {
       const data = await response.json();
       if (response.ok) {
         toast.success("Plan purchased successfully");
+        console.log(data,'sdflsjd');
+        localStorage.setItem("user", JSON.stringify(data?.user));
+        createLoginNotification(localStorage.getItem('userId'),location.state.state)
+        sendPurchaseMail(email, location.state.plan);
         setTimeout(() => {
           navigate("/dashboard");
         }, 2000);
@@ -158,7 +202,7 @@ const CustomCheckout = () => {
                       <div key={index} className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                           {field.charAt(0).toUpperCase() + field.slice(1)}{" "}
-                          <span className="text-red-500">*</span>
+                          {index < 5 && <span className="text-red-500">*</span>}
                         </label>
                         <input
                           type={field === "email" ? "email" : "text"}
@@ -227,21 +271,6 @@ const CustomCheckout = () => {
                       ${location.state?.pricing || "0.00"}
                     </span>
                   </div>
-
-                  {/* Promo Code Display */}
-                  {/* {location.state?.promo && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">
-                        Promo Applied
-                      </span>
-                      <span className="font-medium text-gray-900 dark:text-white">
-                        - {location.state?.promo.discountValue}{" "}
-                        {location.state?.promo.discountType === "percentage"
-                          ? "%"
-                          : "$"}
-                      </span>
-                    </div>
-                  )} */}
                 </div>
 
                 <hr className="border-gray-200 dark:border-gray-700" />
@@ -249,7 +278,7 @@ const CustomCheckout = () => {
                 <div className="flex justify-between font-semibold text-lg">
                   <span className="text-gray-900 dark:text-white">Total</span>
                   <span className="text-blue-600 dark:text-blue-400">
-                  ${location.state?.pricing || "0.00"}
+                    ${location.state?.pricing || "0.00"}
                   </span>
                 </div>
               </div>

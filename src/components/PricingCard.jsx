@@ -25,11 +25,29 @@ const PricingCard = () => {
   const [isYearly, setIsYearly] = useState(false);
   const navigate = useNavigate();
   const [promotion, setPromotion] = useState({});
+  const [currentPlan,setCurrentPlan]=useState({})
   const [plans, setPlans] = useState([]);
+  const userDetail=JSON.parse(localStorage.getItem('user'));
+  console.log(userDetail,'---useer')
 
   const togglePricing = () => {
     setIsYearly(!isYearly);
   };
+
+  const fetchCurrentPlan=async()=>{
+    try {
+      const response=await fetch(`http://localhost:5000/api/v1/plans/${userDetail?.plan?.planId}`);
+      const resJson=await response.json();
+      setCurrentPlan(resJson.data);
+      console.log(resJson);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  useEffect(()=>{
+    fetchCurrentPlan();
+  },[])
 
   const fetchPromotion = async () => {
     try {
@@ -167,7 +185,7 @@ const PricingCard = () => {
                   }
                   className={"mt-auto"}
                 >
-                  Get Started
+                  {`${plan.price>currentPlan.price?'Upgrade Plan':plan.price<currentPlan.price?'Downgrade Plan':'Renew Plan'}`}
                 </CustomButton>
               </div>
             </motion.div>

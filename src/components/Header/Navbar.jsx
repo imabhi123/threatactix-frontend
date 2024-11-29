@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon, ChevronDown, Bell } from "lucide-react";
 import logo from "../../assets/images/threatactix_logo_dark.png";
 import { ThemeContext } from "../../context/ThemeContext";
-import PromotionBar from "./PromotionBar";
+import axios from "axios";
 
 const Navbar = ({ isVisible, setIsVisible }) => {
   const { token, signOut } = useContext(AuthContext);
@@ -16,6 +16,26 @@ const Navbar = ({ isVisible, setIsVisible }) => {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const createLogoutNotification = async (userId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/notification",
+        {
+          type: "logout",
+          title: "User Logout",
+          message: "You have successfully logged out of your account.",
+          time: new Date().toISOString(),
+          userId: userId,
+        }
+      );
+
+      return response.data.notification;
+    } catch (error) {
+      console.error("Failed to create logout notification:", error);
+      return null;
+    }
+  };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -41,6 +61,7 @@ const Navbar = ({ isVisible, setIsVisible }) => {
 
   const handleSignOut = () => {
     signOut();
+    createLogoutNotification(localStorage.getItem("userId"));
     navigate("/login");
   };
 
@@ -77,16 +98,11 @@ const Navbar = ({ isVisible, setIsVisible }) => {
       }
       ${isMenuOpen ? "h-screen md:h-auto" : ""}`}
     >
-      {/* <PromotionBar setIsVisible={setIsVisible} isVisible={isVisible} /> */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
-              <img
-                className="h-12  rounded-sm w-auto"
-                src={logo}
-                alt="Logo"
-              />
+              <img className="h-12 rounded-sm w-auto" src={logo} alt="Logo" />
             </Link>
           </div>
           <div className="hidden md:block">
@@ -144,7 +160,6 @@ const Navbar = ({ isVisible, setIsVisible }) => {
                   </div>
                 </>
               )}
-              {/* Rest of the navigation links */}
               <Link
                 to="/pricing"
                 className={
@@ -155,16 +170,6 @@ const Navbar = ({ isVisible, setIsVisible }) => {
               >
                 Pricing
               </Link>
-              {/* <Link
-                to="/docs"
-                className={
-                  location.pathname === "/docs"
-                    ? activeNavLinkClass
-                    : navLinkClass
-                }
-              >
-                Docs
-              </Link> */}
               <Link
                 to="/blogs"
                 className={
@@ -189,6 +194,18 @@ const Navbar = ({ isVisible, setIsVisible }) => {
           </div>
           <div className="hidden md:block">
             <div className="ml-4 flex items-center md:ml-6">
+              {token && (
+                <Link
+                  to="/notifications"
+                  className={`mr-3 ${
+                    isDarkMode
+                      ? "text-gray-300 hover:text-white"
+                      : "text-gray-700 hover:text-black"
+                  } transition-colors duration-200`}
+                >
+                  <Bell className="h-5 w-5" />
+                </Link>
+              )}
               <button
                 onClick={toggleDarkMode}
                 className={`p-2 rounded-full ${
@@ -277,9 +294,6 @@ const Navbar = ({ isVisible, setIsVisible }) => {
             <Link to="/pricing" className={navLinkClass + " block"}>
               Pricing
             </Link>
-            {/* <Link to="/docs" className={navLinkClass + " block"}>
-              Docs
-            </Link> */}
             <Link to="/blogs" className={navLinkClass + " block"}>
               Blogs
             </Link>
@@ -314,6 +328,18 @@ const Navbar = ({ isVisible, setIsVisible }) => {
                 </>
               ) : (
                 <>
+                  {token && (
+                    <Link
+                      to="/notifications"
+                      className={`mr-3 ${
+                        isDarkMode
+                          ? "text-gray-300 hover:text-white"
+                          : "text-gray-700 hover:text-black"
+                      } transition-colors duration-200 block`}
+                    >
+                      <Bell className="h-5 w-5" />
+                    </Link>
+                  )}
                   <Link
                     to="/profile"
                     className={

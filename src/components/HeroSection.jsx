@@ -21,7 +21,9 @@ import WorldMapComponent from "./WorldMapComponent";
 import { endDateToday } from "../utils/utils";
 
 const StatCard = ({ Icon, title, value, color }) => (
-  <div className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md ${color}`}>
+  <div
+    className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md ${color}`}
+  >
     <div className="flex items-center justify-between">
       <div>
         <p className="text-gray-500 dark:text-gray-400 text-sm">{title}</p>
@@ -46,7 +48,7 @@ const Dashboard = () => {
     affectedCountries: 0,
     targetedIndustries: 0,
   });
-  
+
   const navigate = useNavigate();
 
   // Redirect if not authenticated
@@ -57,16 +59,19 @@ const Dashboard = () => {
   }, [navigate]);
 
   const calculateActiveThreats = (incidentData) => {
-    const activeCount = incidentData?.reduce((count, incident) => 
-      incident.status ? count + 1 : count, 0) || 0;
+    const activeCount =
+      incidentData?.reduce(
+        (count, incident) => (incident.status ? count + 1 : count),
+        0
+      ) || 0;
     setActiveThreatsCount(activeCount);
     return activeCount;
   };
 
   const processIndustryData = (incidents) => {
     const industryMap = new Map();
-    
-    incidents?.forEach(incident => {
+
+    incidents?.forEach((incident) => {
       const industry = incident.data[0]?.row?.victims_industry;
       if (industry) {
         industryMap.set(industry, (industryMap.get(industry) || 0) + 1);
@@ -84,9 +89,9 @@ const Dashboard = () => {
 
   const getCountryCounts = (data) => {
     const countryCounts = new Set();
-    
-    data?.forEach(item => {
-      item.data.forEach(incident => {
+
+    data?.forEach((item) => {
+      item.data.forEach((incident) => {
         if (incident.row.victims_country) {
           countryCounts.add(incident.row.victims_country);
         }
@@ -100,10 +105,20 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/v1/incident/incidents"
+          "http://localhost:5000/api/v1/incident/incidentsss",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId:localStorage.getItem('userId')
+            })
+          }
         );
         const attackTrendData = await response.json();
-        
+        console.log(localStorage.getItem("userId", "--->sdkj"));
+
         // Process incidents
         setIncidentsInDateRange(attackTrendData?.data || []);
         const activeThreats = calculateActiveThreats(attackTrendData?.data);
@@ -115,7 +130,7 @@ const Dashboard = () => {
           const date = item?.createdAt
             ? item.createdAt.split("T")[0]
             : "2024-10-19";
-          
+
           if (!acc[date]) {
             acc[date] = { name: date, attacks: 0 };
           }
@@ -124,7 +139,7 @@ const Dashboard = () => {
         }, {});
 
         setData(Object.values(transformedData || {}));
-        
+
         // Update stats
         setStats({
           totalAttacks: attackTrendData?.data?.length || 0,
@@ -132,7 +147,6 @@ const Dashboard = () => {
           affectedCountries: affectedCountriesCount,
           targetedIndustries: industries.length,
         });
-
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       }
@@ -196,14 +210,14 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-              Recent Malware
+              C2 Inventory
             </h2>
             <ul className="space-y-2">
               {incidentsInDateRange?.slice(0, 5).map((malware, index) => (
                 <li key={index} className="flex items-center space-x-2">
                   <Bug className="w-5 h-5 text-red-500" />
                   <span className="text-gray-900 dark:text-gray-100">
-                    {malware?.data[0]?.row?.threatActor_type || 'Unknown'}
+                    {malware?.data[0]?.row?.threatActor_type || "Unknown"}
                   </span>
                 </li>
               ))}

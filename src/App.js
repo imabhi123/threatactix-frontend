@@ -21,6 +21,8 @@ import PromotionBar from "./components/Header/PromotionBar";
 import ModernCheckout from "./components/payments/ModernCheckout";
 import { useState } from "react";
 import PaymentButton from "./components/PaymentButton";
+import NotificationPage from "./pages/Notifications";
+import { NotificationProvider } from "./context/NotificationContext";
 
 function App() {
   const [isVisible, setIsVisible] = useState(false);
@@ -28,6 +30,7 @@ console.log(isVisible)
   return (
     <AuthProvider>
       <ThemeProvider>
+      <NotificationProvider>
         {" "}
         {/* Use ThemeProvider here */}
         <Router>
@@ -49,6 +52,7 @@ console.log(isVisible)
                 <Route path="/victims" element={<VictimsPage />} />
                 <Route path="/attacks" element={<AttacksPage />} />
                 <Route path="/profile" element={<UserProfile />} />
+                <Route path="/notifications" element={<NotificationPage />} />
                 <Route
                   path="/threat-feed/:id"
                   element={<CyberAttackReportPage />}
@@ -63,6 +67,7 @@ console.log(isVisible)
             <Footer isVisible={isVisible} />
           </div>
         </Router>
+        </NotificationProvider>
       </ThemeProvider>
     </AuthProvider>
     // <PaymentButton/>

@@ -1,251 +1,161 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Send, User } from 'lucide-react';
 
-// Custom Alert Component
-const CustomAlert = ({ type, message, onClose }) => {
-  if (!message) return null;
-
-  return (
-    <div 
-      className={`relative px-4 py-3 rounded-lg border mb-6 ${
-        type === 'error' 
-          ? 'bg-red-50 dark:bg-red-900/30 border-red-400 text-red-700 dark:text-red-200' 
-          : 'bg-green-50 dark:bg-green-900/30 border-green-400 text-green-700 dark:text-green-200'
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <p>{message}</p>
-        <button
-          onClick={onClose}
-          className="ml-4 text-sm opacity-70 hover:opacity-100"
-        >
-          ✕
-        </button>
-      </div>
-    </div>
-  );
-};
+const AnimatedInput = ({ children, ...props }) => (
+  <div className="relative group">
+    {children}
+    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 scale-x-0 group-focus-within:scale-x-100 transition-transform duration-300 origin-left"></div>
+  </div>
+);
 
 const ContactPage = () => {
-  const [agreed, setAgreed] = useState(false);
-  const [status, setStatus] = useState({ type: '', message: '' });
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
-    message: '',
+    message: ''
   });
+  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (!agreed) {
-      setStatus({
-        type: 'error',
-        message: 'Please agree to the privacy policy before submitting.'
-      });
-      return;
-    }
-
-    // Construct email body
     const emailBody = `
-Name: ${formData.firstName} ${formData.lastName}
+Name: ${formData.name}
 Email: ${formData.email}
 
 Message:
 ${formData.message}
     `;
 
-    // Create mailto link
     const mailtoLink = `mailto:kumarabhishek13909@gmail.com?subject=New Contact Form Submission&body=${encodeURIComponent(emailBody)}`;
     
-    // Open default email client
     window.location.href = mailtoLink;
-
-    // Show success message
-    setStatus({
-      type: 'success',
-      message: 'Email client opened! Please send the email from your client.'
-    });
-
-    // Reset form
-    setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      message: '',
-    });
-    setAgreed(false);
-  };
-
-  const clearAlert = () => {
-    setStatus({ type: '', message: '' });
+    setSubmitted(true);
+    
+    // Reset form after a short delay
+    setTimeout(() => {
+      setFormData({ name: '', email: '', message: '' });
+      setSubmitted(false);
+    }, 3000);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-black dark:text-white flex flex-col items-center py-16">
-      <div className="container mx-auto px-6 max-w-6xl">
-        <h1 className="text-5xl font-bold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-          Contact Us
-        </h1>
-        <p className="text-center mb-12 text-lg text-gray-700 dark:text-gray-300">
-          We're here to help! Reach out with any questions or concerns.
-        </p>
-
-        <CustomAlert 
-          type={status.type} 
-          message={status.message} 
-          onClose={clearAlert}
-        />
-
-        <div className="flex flex-col lg:flex-row lg:justify-between gap-12">
-          {/* Contact Form */}
-          <div className="w-full lg:w-7/12 bg-white dark:bg-white/10 dark:backdrop-blur-md dark:border-0 shadow-2xl rounded-lg p-8">
-            <h2 className="text-3xl font-semibold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-              Get in Touch
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <label
-                    htmlFor="first-name"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    First Name
-                  </label>
-                  <input
-                    id="first-name"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    required
-                    className="w-full outline-none bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-gray-600 rounded-md py-2 px-3 text-black dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Your First Name"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="last-name"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Last Name
-                  </label>
-                  <input
-                    id="last-name"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    required
-                    className="w-full outline-none bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-gray-600 rounded-md py-2 px-3 text-black dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Your Last Name"
-                  />
-                </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-6">
+      <div className="w-full  bg-white dark:bg-gray-800 shadow-2xl rounded-3xl overflow-hidden flex flex-col md:flex-row">
+        {/* Contact Information Section */}
+        <div className="w-full md:w-5/12 bg-gradient-to-br from-blue-600 to-purple-700 text-white p-12 flex flex-col justify-center">
+          <h2 className="text-4xl font-bold mb-6 leading-tight">
+            Get in Touch
+          </h2>
+          <p className="mb-8 text-blue-100">
+            Have a question or want to work together? Fill out the form and I'll get back to you as soon as possible.
+          </p>
+          
+          <div className="space-y-6">
+            <div className="flex items-center space-x-4">
+              <div className="bg-white/20 p-3 rounded-full">
+                <Mail className="h-6 w-6 text-white" />
               </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >
-                  Email
-                </label>
+              <a 
+                href="mailto:kumarabhishek13909@gmail.com" 
+                className="hover:text-blue-100 transition-colors"
+              >
+                kumarabhishek13909@gmail.com
+              </a>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="bg-white/20 p-3 rounded-full">
+                <Send className="h-6 w-6 text-white" />
+              </div>
+              <span>Bangalore, India</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Form Section */}
+        <div className="w-full md:w-7/12 p-12">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <AnimatedInput>
+              <label 
+                htmlFor="name" 
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2"
+              >
+                Full Name
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-10 pr-3 py-2 border-b border-gray-300 dark:border-gray-600 dark:text-white bg-transparent focus:outline-none focus:border-blue-500"
+                  placeholder="Your Name"
+                />
+              </div>
+            </AnimatedInput>
+
+            <AnimatedInput>
+              <label 
+                htmlFor="email" 
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2"
+              >
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="email"
                   id="email"
                   name="email"
-                  type="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full outline-none bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-gray-600 rounded-md py-2 px-3 text-black dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Your Email"
+                  className="w-full pl-10 pr-3 py-2 border-b border-gray-300 dark:text-white dark:border-gray-600 bg-transparent focus:outline-none focus:border-blue-500"
+                  placeholder="you@example.com"
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  className="w-full outline-none bg-gray-100 dark:bg-white/10 border border-gray-300 dark:border-gray-600 rounded-md py-2 px-3 text-black dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Your Message"
-                />
-              </div>
-              <div className="flex items-center gap-4">
-                <input
-                  type="checkbox"
-                  id="agreed"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  className="h-4 w-4 outline-none text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor="agreed" className="text-sm text-gray-700 dark:text-gray-300">
-                  I agree to the{' '}
-                  <a href="#" className="text-blue-400 hover:underline">
-                    privacy policy
-                  </a>
-                </label>
-              </div>
-              <button
-                type="submit"
-                disabled={!agreed}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 rounded-md transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                Send Message
-              </button>
-            </form>
-          </div>
+            </AnimatedInput>
 
-          {/* Contact Details */}
-          <div className="w-full lg:w-4/12 bg-white dark:bg-white/10 dark:backdrop-blur-md dark:border-0 shadow-2xl rounded-lg p-8">
-            <h2 className="text-3xl font-semibold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-              Contact Details
-            </h2>
-            <div className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <div className="bg-blue-500 p-3 rounded-full">
-                  <Mail className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-gray-700 dark:text-gray-400">Email</p>
-                  <a href="mailto:kumarabhishek13909@gmail.com" className="text-lg text-blue-400 hover:underline">
-                    kumarabhishek13909@gmail.com
-                  </a>
-                </div>
+            <AnimatedInput>
+              <label 
+                htmlFor="message" 
+                className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2"
+              >
+                Your Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows={4}
+                className="w-full px-3 py-2 border-b border-gray-300 dark:text-white dark:border-gray-600 bg-transparent focus:outline-none focus:border-blue-500 resize-none"
+                placeholder="What can I help you with?"
+              />
+            </AnimatedInput>
+
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-700 text-white py-3 rounded-lg hover:from-blue-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              Send Message
+            </button>
+
+            {submitted && (
+              <div className="mt-4 text-center text-green-600 animate-bounce">
+                Email client opened! Please complete sending the email.
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="bg-purple-500 p-3 rounded-full">
-                  <Phone className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-gray-700 dark:text-gray-400">Phone</p>
-                  <a href="tel:+123456789" className="text-lg text-blue-400 hover:underline">
-                    +1 234 567 89
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="bg-indigo-500 p-3 rounded-full">
-                  <MapPin className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-gray-700 dark:text-gray-400">Address</p>
-                  <p className="text-lg">123 Threatactix St, Bangalore, India</p>
-                </div>
-              </div>
-            </div>
-          </div>
+            )}
+          </form>
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ const WorldMapComponent = () => {
     data.forEach((item) => {
       item.data.forEach((incident) => {
        
-        const country = incident.row.victims_country; console.log(country);
+        const country = incident.row.victims_country;
 
         if (countryCounts[country]) {
           countryCounts[country]++;
@@ -38,14 +38,22 @@ const WorldMapComponent = () => {
     try {
       // Fetch attack trend data
       const attackTrendResponse = await fetch(
-        "http://localhost:5000/api/v1/incident/incidents"
+        "http://localhost:5000/api/v1/incident/incidentsss",{
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId:localStorage.getItem('userId')
+          })
+        }
       );
       const attackTrendData = await attackTrendResponse.json();
       setStats((prev) => ({
         ...prev,
         totalAttacks: attackTrendData?.data?.length,
       }));
-      console.log(getCountryCounts(attackTrendData?.data))
+      // console.log(getCountryCounts(attackTrendData?.data))
 
       setCountriesData(getCountryCounts(attackTrendData?.data));
 
@@ -339,7 +347,7 @@ const WorldMapComponent = () => {
   return (
     <div className="bg-gray-100 dark:bg-gray-900 py-6  rounded-lg text-black dark:text-white">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Most affected nations</h2>
+        <h2 className="text-lg font-semibold">C2 Servers discovered in Countries</h2>
         <select className="dark:bg-gray-800 bg-gray-100 text-sm rounded px-2 py-1">
           <option>Last 24 hours</option>
         </select>
@@ -349,7 +357,7 @@ const WorldMapComponent = () => {
         <WorldMap
           // styleFunction={getStyle}
           color="red"
-          title="Most Affected Countries"
+          title="C2 Servers discovered in Countries"
           value-suffix="people"
           size="responsive"
           className="p-4 bg-black"
