@@ -5,10 +5,11 @@ import { Shield, Calendar, CheckCircle } from 'lucide-react';
 const ProfilePage = () => {
   const [planDetails, setPlanDetails] = useState({});
   const user = JSON.parse(localStorage.getItem('user'));
+  console.log(user)
 
   const fetchPlanDetail = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/plans/${user.plan}`);
+      const response = await axios.get(`http://localhost:5000/api/v1/plans/${user.plan.planId}`);
       console.log(response.data);
       setPlanDetails(response.data.data);
     } catch (error) {
@@ -114,7 +115,7 @@ const ProfilePage = () => {
                 </div>
                 <div className="flex items-center p-4 bg-purple-50 rounded-xl">
                   <Shield className="w-5 h-5 mr-3 text-purple-600" />
-                  <span className="text-gray-700">Plan ID: {user.plan}</span>
+                  <span className="text-gray-700">Plan ID: {user.plan.planId}</span>
                 </div>
               </div>
             </div>

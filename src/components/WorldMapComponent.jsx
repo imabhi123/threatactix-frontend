@@ -349,7 +349,14 @@ const WorldMapComponent = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">C2 Servers discovered in Countries</h2>
         <select className="dark:bg-gray-800 bg-gray-100 text-sm rounded px-2 py-1">
-          <option>Last 24 hours</option>
+        <option>Last 24 hours</option>
+        <option>Last Week</option>
+        <option>Last Month</option>
+        <option>Last 6 Months</option>
+        <option>Last Year</option>
+        <option>Last 2 Years</option>
+        <option>Last 3 Years</option>
+        <option>Last 4 Years</option>
         </select>
       </div>
 
@@ -379,7 +386,7 @@ const WorldMapComponent = () => {
       </div>
 
       <div className="space-y-2 pl-8 w-full md:w-[50%]">
-        {countriesData?.slice(0,5).map((item) => (
+        {countriesData?.map((item) => (
           <div key={item.country} className="flex items-center text-sm">
             <span className="w-6 mr-2">
               {countryToCode[item?.name]

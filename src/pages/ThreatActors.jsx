@@ -212,7 +212,7 @@ const CategoryCard = React.memo(({ category, actors, onActorClick, isExpanded, o
       onClick={onToggle}
     >
       <div className="flex items-center space-x-4">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+        <h3 className="text-xl hover:text-black hover:dark:text-white font-semibold text-gray-900 dark:text-gray-100">
           {category}
         </h3>
         <span className="bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200 px-3 py-1 rounded-full text-sm">
@@ -266,7 +266,7 @@ const ThreatActorsPage = () => {
   const fetchIncidentData = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get('http://localhost:5000/api/v1/incident/incidents');
+      const { data } = await axios.post('http://localhost:5000/api/v1/incident/incidentsss',{userId:localStorage.getItem('userId')});
       setIncidentData(data?.data);
       setLoading(false);
     } catch (error) {
@@ -337,7 +337,7 @@ const ThreatActorsPage = () => {
         Threat Actors
       </h1>
       
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <h2 className="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-400">
           FILTERS
         </h2>
@@ -357,9 +357,9 @@ const ThreatActorsPage = () => {
             </button>
           )}
         </div>
-      </div>
+      </div> */}
 
-      <div className="space-y-4">
+      <div className="space-y-4 relative z-10">
         {Object.entries(filteredGroups).map(([category, actors]) => (
           <CategoryCard
             key={category}

@@ -35,6 +35,7 @@ const PricingCard = () => {
   };
 
   const fetchCurrentPlan=async()=>{
+    console.log(userDetail,'kjdslsd')
     try {
       const response=await fetch(`http://localhost:5000/api/v1/plans/${userDetail?.plan?.planId}`);
       const resJson=await response.json();
@@ -46,7 +47,7 @@ const PricingCard = () => {
   }
 
   useEffect(()=>{
-    fetchCurrentPlan();
+    if(userDetail?.plan?.planId)fetchCurrentPlan();
   },[])
 
   const fetchPromotion = async () => {
@@ -185,7 +186,7 @@ const PricingCard = () => {
                   }
                   className={"mt-auto"}
                 >
-                  {`${plan.price>currentPlan.price?'Upgrade Plan':plan.price<currentPlan.price?'Downgrade Plan':'Renew Plan'}`}
+                  {`${plan.price>currentPlan.price?'Upgrade Plan':plan.price<currentPlan.price?'Upgrade Plan':'Renew Plan'}`}
                 </CustomButton>
               </div>
             </motion.div>

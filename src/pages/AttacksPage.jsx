@@ -9,7 +9,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Assuming you're using react-router
 import { endDateToday } from "../utils/utils";
 import AdaptivePulsatingSpinner from "../components/Loading";
@@ -59,7 +58,12 @@ const AttackItem = ({ date, type, target, severity }) => (
 
 const AttacksPage = () => {
   const [timeRange, setTimeRange] = useState("7d");
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([
+    { date: "2024-12-01", attacks: 5 },
+    { date: "2024-12-02", attacks: 10 },
+    { date: "2024-12-03", attacks: 8 },
+    { date: "2024-12-04", attacks: 15 },
+  ]);
   const [incidentsInDateRange, setIncidentsInDateRange] = useState([]);
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
@@ -108,6 +112,7 @@ const AttacksPage = () => {
       (acc, incident) => acc + (incident.status ? 1 : 0),
       0
     );
+    console.log(count, "abhishek");
     setActiveThreatsCount(count);
   };
 
@@ -132,25 +137,54 @@ const AttacksPage = () => {
     }));
   }
 
+  function extractChartData(inputArray) {
+    if (!Array.isArray(inputArray)) {
+      throw new Error("Input must be an array");
+    }
+  
+    return inputArray.flatMap((entry) => {
+      if (!entry.data || !Array.isArray(entry.data)) {
+        console.warn("Invalid data field in entry:", entry);
+        return []; // Skip invalid entries
+      }
+  
+      return entry.data.map((incident) => {
+        const { publicationDate, title } = incident.row;
+  
+        // Convert Excel date serial number to JavaScript Date
+        const convertedDate = new Date((publicationDate - 25569) * 86400 * 1000);
+  
+        return {
+          date: convertedDate.toISOString().split("T")[0], // Format as YYYY-MM-DD
+          attacks: title.length, // Use the length of the title as a metric
+        };
+      });
+    });
+  }
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setLoading(true);
-        const attackTrendResponse = await axios.get(
-          "http://localhost:5000/api/v1/incident/incidentsss",{
+        const attackTrendResponse = await fetch(
+          "http://localhost:5000/api/v1/incident/incidentsss",
+          {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              userId:localStorage.getItem('userId')
-            })
+              userId: localStorage.getItem("userId"),
+            }),
           }
         );
-        const attackTrendData = attackTrendResponse.data;
-        console.log(attackTrendData?.data);
+        const attackTrendData = await attackTrendResponse.json();
+        console.log(attackTrendData);
+
         setIncidentsInDateRange(attackTrendData?.data);
         activeThreats(attackTrendData?.data);
+        // console.log(attackTrendData?.data,'---->data counts')
+        setData(extractChartData(attackTrendData?.data));
         const countryCounts = getCountryCounts(attackTrendData?.data);
         console.log(countryCounts, "abhishek");
         const industriesResponse = await fetch(
@@ -165,60 +199,6 @@ const AttacksPage = () => {
           }
         );
         const industriesData = await industriesResponse.json();
-        console.log(industriesData,'adjk')
-        setIndustries(industriesData);
-        setStats((prevStats) => ({
-          ...prevStats,
-          affectedCountries: countryCounts.length,
-          totalAttacks: attackTrendData?.data?.length,
-          targetedIndustries: industriesData.length,
-        }));
-
-        const groupedData = attackTrendData?.data?.reduce((acc, curr) => {
-          const date = curr?.createdAt?.split("T")[0] || "2024-10-17"; // Extracting just the date part (yyyy-mm-dd)
-          const attacks = 1;
-
-          // Check if this date is already in the accumulator
-          if (acc[date]) {
-            acc[date].attacks += attacks;
-          } else {
-            acc[date] = { date, attacks };
-          }
-
-          return acc;
-        }, {});
-
-        // Convert the grouped object back to an array
-        setData(Object.values(groupedData) || []);
-
-        const attackInDateRangeResponse = await fetch(
-          "http://localhost:5000/api/v1/incident/incidents/dates",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              startDate: "2023-01-01",
-              endDate: formatDate(Date.now()),
-            }),
-          }
-        );
-        const attackInDateRangeData = await attackInDateRangeResponse.json();
-        console.log(attackInDateRangeData,'abhsk')
-        
-
-        const countriesResponse = await fetch(
-          "http://localhost:5000/api/v1/incident/incidents/getMostAffectedCountries",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              startDate: "2023-01-01",
-              endDate: formatDate(Date.now()),
-            }),
-          }
-        );
-        const countriesData = await countriesResponse.json();
-        setCountriesData(countriesData);
 
         setStats({
           totalAttacks: attackTrendData?.data?.length || 0,
@@ -226,11 +206,12 @@ const AttacksPage = () => {
           affectedCountries: countryCounts.length,
           targetedIndustries: industriesData.length,
         });
-        setLoading(false);
+        // setLoading(false);
         setMalwareDistribution(
           countAttacksByCategory(attackTrendData?.data || [])
         );
         activeThreats(attackTrendData?.data || []);
+        setLoading(false);
       } catch (error) {
         setLoading(false);
         console.error("Error fetching dashboard data:", error);
@@ -243,6 +224,7 @@ const AttacksPage = () => {
   if (loading) {
     return <AdaptivePulsatingSpinner />;
   }
+  console.log(data, "---->sdjlksd");
 
   if (!data.length) return <p>Loading...</p>;
 
@@ -294,6 +276,9 @@ const AttacksPage = () => {
               <option value="7d">Last 7 Days</option>
               <option value="30d">Last 30 Days</option>
               <option value="12m">Last 12 Months</option>
+              <option value="12m">Last 2 Years</option>
+              <option value="12m">Last 3 Years</option>
+              <option value="12m">Last 4 Years</option>
             </select>
           </div>
         </div>
@@ -314,7 +299,7 @@ const AttacksPage = () => {
       </div>
 
       <div>
-        {incidentsInDateRange.map((incident, index) => (
+        {incidentsInDateRange?.map((incident, index) => (
           <AttackItem
             key={index}
             date={incident?.data[0]?.row?.publicationDate}
